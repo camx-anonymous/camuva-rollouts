@@ -5,63 +5,63 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CAMUVA Rollouts</title>
 <meta name="description" content="Rollout videos for CAMUVA (anonymous submission).">
+<link rel="stylesheet" href="https://camx-anonymous.github.io/site.css">
 <style>
-  :root { --bg:#fff; --fg:#1d1d1f; --muted:#6e6e73; --line:#e5e5ea; --accent:#2156d9; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#111113; --fg:#f2f2f7; --muted:#a1a1a6; --line:#2c2c2e; --accent:#6b9bff; } }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--fg); font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
-  main { max-width:1200px; margin:0 auto; padding:56px 16px; }
-  h1 { font-size:2.2rem; margin:0 0 6px; }
-  .sub { color:var(--muted); margin:0 0 24px; }
-  #filter { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
-  #filter button { font:inherit; font-size:14px; border:1px solid var(--line); background:none; color:var(--fg); border-radius:999px; padding:4px 14px; cursor:pointer; }
-  #filter button.on { border-color:var(--accent); color:var(--accent); }
-  #grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
-  figure { margin:0; }
-  video { width:100%; border-radius:8px; background:#000; display:block; }
-  figcaption { font-size:14px; color:var(--muted); margin-top:6px; }
-  figcaption b { color:var(--fg); font-weight:600; }
-  .empty { color:var(--muted); }
-  /* site switcher (shared between camx-dataset and camuva-rollouts) */
-  .site-switch { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; padding:10px 16px; border-bottom:1px solid var(--line); font-size:14px; }
-  .site-switch a { color:var(--muted); text-decoration:none; padding:4px 12px; border-radius:999px; }
-  .site-switch a:hover { color:var(--fg); }
-  .site-switch a[aria-current="page"] { background:color-mix(in srgb, var(--accent) 15%, transparent); color:var(--accent); font-weight:600; }
+/* page-specific: the shared chrome (tokens, header, chips, cards, footer) comes from site.css on the CAMX site */
+.grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.card .vid{aspect-ratio:16/9}
+.card .vid video{cursor:pointer}
+.empty{color:var(--ink3);padding:30px;text-align:center;border:1px dashed var(--line);border-radius:8px;background:var(--chipbg)}
 </style>
 </head>
 <body>
-<nav class="site-switch" aria-label="Switch site">
+<nav class="site-switch" aria-label="Switch site"><span class="lbl">Sites</span>
   <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
   <a href="https://camx-anonymous.github.io/camuva-rollouts/" aria-current="page">CAMUVA Rollouts</a>
 </nav>
-<main>
-  <p style="font-weight:600;color:var(--accent)">Hello, world! 👋 This site is live.</p>
-  <h1>CAMUVA Rollouts</h1>
-  <p class="sub">Anonymous Authors · Under Review</p>
-  <div id="filter"></div>
-  <div id="grid"><p class="empty">Loading…</p></div>
+<header><div class="wrap">
+  <h1>CAMUVA Rollouts <small>policy rollout videos</small></h1>
+  <p class="sub">Anonymous Authors · Under Review · real-robot rollouts of CAMUVA policies; each clip is one episode, unedited</p>
+  <nav class="links">
+    <a href="#">Paper (coming soon)</a>
+    <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
+    <a href="https://github.com/camx-anonymous/camuva-rollouts">Code</a>
+    <a href="videos.json">videos.json</a>
+  </nav>
+</div></header>
+
+<main class="wrap">
+  <div class="toolbar" id="filter"></div>
+  <div class="grid" id="grid"><p class="empty">Loading…</p></div>
+  <footer>This page is anonymized for review. <span id="footInfo"></span></footer>
 </main>
 <script>
-// videos.json: [{ "src": "videos/x.mp4", "title": "...", "task": "...", "note": "..." }]
-fetch('videos.json').then(r => r.json()).then(list => {
-  const grid = document.getElementById('grid'), filter = document.getElementById('filter');
-  if (!list.length) { grid.innerHTML = '<p class="empty">No rollout videos yet.</p>'; return; }
-  const tasks = ['All', ...new Set(list.map(v => v.task).filter(Boolean))];
-  const render = t => {
-    grid.innerHTML = '';
-    list.filter(v => t === 'All' || v.task === t).forEach(v => {
-      const f = document.createElement('figure');
-      f.innerHTML = `<video src="${v.src}" muted loop playsinline controls preload="metadata"></video>
-        <figcaption><b>${v.title || ''}</b>${v.note ? ' — ' + v.note : ''}</figcaption>`;
-      grid.appendChild(f);
+// videos.json: [{ "src": "videos/x.mp4", "poster": "posters/x.jpg", "title": "...", "task": "...", "note": "..." }]
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+fetch('videos.json').then(r=>r.json()).then(list=>{
+  const grid=document.getElementById('grid'),filter=document.getElementById('filter');
+  if(!list.length){grid.innerHTML='<p class="empty">No rollout videos yet.</p>';return;}
+  const tasks=[...new Set(list.map(v=>v.task).filter(Boolean))];
+  const cnt=t=>list.filter(v=>v.task===t).length;
+  document.getElementById('footInfo').textContent=`${list.length} rollouts`+(tasks.length?` across ${tasks.length} tasks`:'');
+  const render=t=>{
+    grid.innerHTML='';
+    list.filter(v=>t==='all'||v.task===t).forEach(v=>{
+      const c=document.createElement('div');c.className='card';
+      c.innerHTML=`<div class="vid"><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline controls preload="metadata"></video></div>
+        <div class="title">${esc(v.title||'')}</div>
+        <div class="meta">${v.task?`<div><span class="k">Task</span> ${esc(v.task)}</div>`:''}${v.note?`<div>${esc(v.note)}</div>`:''}</div>`;
+      grid.appendChild(c);
     });
-    [...filter.children].forEach(b => b.classList.toggle('on', b.textContent === t));
+    filter.querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   };
-  if (tasks.length > 2) tasks.forEach(t => {
-    const b = document.createElement('button'); b.textContent = t; b.onclick = () => render(t); filter.appendChild(b);
-  });
-  render('All');
-}).catch(() => { document.getElementById('grid').innerHTML = '<p class="empty">Could not load videos.json.</p>'; });
+  if(tasks.length>1){
+    filter.innerHTML=`<span class="k">Task</span> <span class="chip btn" data-t="all">all<span class="c">${list.length}</span></span>`
+      +tasks.map(t=>`<span class="chip btn" data-t="${esc(t)}">${esc(t)}<span class="c">${cnt(t)}</span></span>`).join('');
+    filter.querySelectorAll('.chip').forEach(b=>b.onclick=()=>render(b.dataset.t));
+  }
+  render('all');
+}).catch(()=>{document.getElementById('grid').innerHTML='<p class="empty">Could not load videos.json.</p>';});
 </script>
 </body>
 </html>
