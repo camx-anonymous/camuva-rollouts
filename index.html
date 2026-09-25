@@ -22,9 +22,18 @@
   figcaption { font-size:14px; color:var(--muted); margin-top:6px; }
   figcaption b { color:var(--fg); font-weight:600; }
   .empty { color:var(--muted); }
+  /* site switcher (shared between camx-dataset and camuva-rollouts) */
+  .site-switch { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; padding:10px 16px; border-bottom:1px solid var(--line); font-size:14px; }
+  .site-switch a { color:var(--muted); text-decoration:none; padding:4px 12px; border-radius:999px; }
+  .site-switch a:hover { color:var(--fg); }
+  .site-switch a[aria-current="page"] { background:color-mix(in srgb, var(--accent) 15%, transparent); color:var(--accent); font-weight:600; }
 </style>
 </head>
 <body>
+<nav class="site-switch" aria-label="Switch site">
+  <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
+  <a href="https://camx-anonymous.github.io/camuva-rollouts/" aria-current="page">CAMUVA Rollouts</a>
+</nav>
 <main>
   <p style="font-weight:600;color:var(--accent)">Hello, world! 👋 This site is live.</p>
   <h1>CAMUVA Rollouts</h1>
