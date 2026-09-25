@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAMUVA Rollouts</title>
+<meta name="description" content="Rollout videos for CAMUVA (anonymous submission).">
+<style>
+  :root { --bg:#fff; --fg:#1d1d1f; --muted:#6e6e73; --line:#e5e5ea; --accent:#2156d9; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111113; --fg:#f2f2f7; --muted:#a1a1a6; --line:#2c2c2e; --accent:#6b9bff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:1200px; margin:0 auto; padding:56px 16px; }
+  h1 { font-size:2.2rem; margin:0 0 6px; }
+  .sub { color:var(--muted); margin:0 0 24px; }
+  #filter { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+  #filter button { font:inherit; font-size:14px; border:1px solid var(--line); background:none; color:var(--fg); border-radius:999px; padding:4px 14px; cursor:pointer; }
+  #filter button.on { border-color:var(--accent); color:var(--accent); }
+  #grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+  figure { margin:0; }
+  video { width:100%; border-radius:8px; background:#000; display:block; }
+  figcaption { font-size:14px; color:var(--muted); margin-top:6px; }
+  figcaption b { color:var(--fg); font-weight:600; }
+  .empty { color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <p style="font-weight:600;color:var(--accent)">Hello, world! 👋 This site is live.</p>
+  <h1>CAMUVA Rollouts</h1>
+  <p class="sub">Anonymous Authors · Under Review</p>
+  <div id="filter"></div>
+  <div id="grid"><p class="empty">Loading…</p></div>
+</main>
+<script>
+// videos.json: [{ "src": "videos/x.mp4", "title": "...", "task": "...", "note": "..." }]
+fetch('videos.json').then(r => r.json()).then(list => {
+  const grid = document.getElementById('grid'), filter = document.getElementById('filter');
+  if (!list.length) { grid.innerHTML = '<p class="empty">No rollout videos yet.</p>'; return; }
+  const tasks = ['All', ...new Set(list.map(v => v.task).filter(Boolean))];
+  const render = t => {
+    grid.innerHTML = '';
+    list.filter(v => t === 'All' || v.task === t).forEach(v => {
+      const f = document.createElement('figure');
+      f.innerHTML = `<video src="${v.src}" muted loop playsinline controls preload="metadata"></video>
+        <figcaption><b>${v.title || ''}</b>${v.note ? ' — ' + v.note : ''}</figcaption>`;
+      grid.appendChild(f);
+    });
+    [...filter.children].forEach(b => b.classList.toggle('on', b.textContent === t));
+  };
+  if (tasks.length > 2) tasks.forEach(t => {
+    const b = document.createElement('button'); b.textContent = t; b.onclick = () => render(t); filter.appendChild(b);
+  });
+  render('All');
+}).catch(() => { document.getElementById('grid').innerHTML = '<p class="empty">Could not load videos.json.</p>'; });
+</script>
+</body>
+</html>
