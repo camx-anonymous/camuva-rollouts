@@ -8,9 +8,18 @@
 <link rel="stylesheet" href="https://camx-anonymous.github.io/site.css">
 <style>
 /* page-specific: the shared chrome (tokens, header, chips, cards, footer) comes from site.css on the CAMX site */
-.grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
-.card .vid{aspect-ratio:16/9}
+.card .vid{aspect-ratio:4/3}
 .card .vid video{cursor:pointer}
+.card .title{word-break:normal;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.card .title .ep{color:var(--ink3);font-weight:normal;font-size:12px}
+.card .title .chip{margin-left:auto}
+.card .meta .views{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.chip.in{background:var(--good);color:#fff}
+.chip.out{background:var(--chipbg);color:var(--ink3);border-color:var(--line)}
+.card .meta .instr{color:var(--ink3);font-style:italic}
+.facets{display:flex;flex-direction:column;gap:4px;margin:10px 0 12px}
+.facets .toolbar{margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink2);font-size:13px;margin:0 0 14px}
 .empty{grid-column:1/-1;color:var(--ink3);padding:30px;text-align:center;border:1px dashed var(--line);border-radius:8px;background:var(--chipbg)}
 </style>
 </head>
@@ -21,7 +30,7 @@
 </nav>
 <header><div class="wrap">
   <h1>CAMUVA Rollouts <small>policy rollout videos</small></h1>
-  <p class="sub">Anonymous Authors · Under Review · real-robot rollouts of CAMUVA policies; each clip is one episode, unedited</p>
+  <p class="sub">Anonymous Authors · Under Review · real-robot rollouts of CAMUVA policies. One clip per evaluation episode, unedited and uncut. Each tile is one camera on the rig; all tiles are resampled onto a common 30 fps clock from their per-frame timestamps, anchored to the fixed third-person camera in the first tile. Tiles marked <b>policy input</b> are the camera streams the policy received during the rollout; the third-person camera is for the viewer only and is never seen by the policy. Episodes are labeled success or failure as scored during the evaluation; every episode of every run is shown, including failures.</p>
   <nav class="links">
     <a href="#">Paper (coming soon)</a>
     <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
@@ -30,36 +39,68 @@
 </div></header>
 
 <main class="wrap">
-  <div class="toolbar" id="filter"></div>
+  <div class="facets" id="facets"></div>
+  <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span> <span class="muted">a dimmed tile with a red marker means that camera dropped frames and its last frame is being held</span></div>
   <div class="grid" id="grid"><p class="empty">Loading…</p></div>
   <footer>This page is anonymized for review. <span id="footInfo"></span></footer>
 </main>
 <script>
-// videos.json: [{ "src": "videos/x.mp4", "poster": "posters/x.jpg", "title": "...", "task": "...", "note": "..." }]
+// videos.json: [{ src, poster, title, task, rig, robot, policy, outcome: "success"|"failure"|null, instruction,
+//                 episode, seconds, width, height, views: [{label, fed}], note }]
+// Built by tools/build_videos.py from the raw rollout episodes.
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const FACETS=[['rig','Rig'],['task','Task'],['policy','Policy'],['outcome','Outcome']];
+const OUTCOME={success:['pass','success'],failure:['fail','failure']};
+const fmtT=s=>s==null?'':(s>=60?`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`:`${s.toFixed(1)} s`);
+const state={};
 fetch('videos.json').then(r=>r.json()).then(list=>{
-  const grid=document.getElementById('grid'),filter=document.getElementById('filter');
+  const grid=document.getElementById('grid'),facets=document.getElementById('facets'),foot=document.getElementById('footInfo');
   if(!list.length){grid.innerHTML='<p class="empty">No rollout videos yet.</p>';return;}
-  const tasks=[...new Set(list.map(v=>v.task).filter(Boolean))];
-  const cnt=t=>list.filter(v=>v.task===t).length;
-  document.getElementById('footInfo').textContent=`${list.length} rollouts`+(tasks.length?` across ${tasks.length} tasks`:'');
-  const render=t=>{
+  list.forEach(v=>{if(!v.outcome)v.outcome='unscored';});
+  const vals=k=>[...new Set(list.map(v=>v[k]).filter(Boolean))];
+  const nSucc=list.filter(v=>v.outcome==='success').length,nScored=list.filter(v=>v.outcome!=='unscored').length;
+  foot.textContent=`${list.length} rollouts across ${vals('task').length} tasks and ${vals('rig').length} rigs · ${nSucc}/${nScored} scored episodes succeeded`;
+  const selected=()=>list.filter(v=>FACETS.every(([k])=>!state[k]||v[k]===state[k]));
+  const render=()=>{
+    const sel=selected();
     grid.innerHTML='';
-    list.filter(v=>t==='all'||v.task===t).forEach(v=>{
+    if(!sel.length){grid.innerHTML='<p class="empty">No rollouts match these filters.</p>';}
+    sel.forEach(v=>{
       const c=document.createElement('div');c.className='card';
-      c.innerHTML=`<div class="vid"><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline controls preload="metadata"></video></div>
-        <div class="title">${esc(v.title||'')}</div>
-        <div class="meta">${v.task?`<div><span class="k">Task</span> ${esc(v.task)}</div>`:''}${v.note?`<div>${esc(v.note)}</div>`:''}</div>`;
+      const oc=OUTCOME[v.outcome];
+      const ar=v.width&&v.height?` style="aspect-ratio:${v.width}/${v.height}"`:'';
+      const views=(v.views||[]).map(x=>`<span class="chip ${x.fed?'in':'out'}">${esc(x.label)}</span>`).join('');
+      c.innerHTML=`<div class="vid"${ar}><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline controls preload="none"></video></div>
+        <div class="title"><span>${esc(v.task||v.title||'')}</span><span class="ep">${v.episode!=null?`ep ${String(v.episode).padStart(2,'0')}`:''}</span>${oc?`<span class="chip ${oc[0]}">${oc[1]}</span>`:''}</div>
+        <div class="meta">
+          ${v.rig?`<div><span class="k">Rig</span> ${esc(v.rig)}${v.robot?` <span class="muted">· ${esc(v.robot)}</span>`:''}</div>`:''}
+          ${v.policy?`<div><span class="k">Policy</span> ${esc(v.policy)}${v.seconds!=null?` <span class="muted">· ${fmtT(v.seconds)}</span>`:''}</div>`:''}
+          ${views?`<div class="views"><span class="k">Views</span> ${views}</div>`:''}
+          ${v.instruction?`<div class="instr">“${esc(v.instruction)}”</div>`:''}
+          ${v.note?`<div>${esc(v.note)}</div>`:''}
+        </div>`;
       grid.appendChild(c);
     });
-    filter.querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+    // facet chips: counts reflect the other active filters, so a chip shows how many cards it would leave
+    facets.innerHTML='';
+    FACETS.forEach(([k,label])=>{
+      const vs=vals(k); if(vs.length<2)return;
+      const others=list.filter(v=>FACETS.every(([o])=>o===k||!state[o]||v[o]===state[o]));
+      const cnt=x=>others.filter(v=>v[k]===x).length;
+      const row=document.createElement('div');row.className='toolbar';
+      row.innerHTML=`<span class="k">${label}</span> <span class="chip btn${state[k]?'':' on'}" data-k="${k}" data-v="">all<span class="c">${others.length}</span></span>`
+        +vs.map(x=>`<span class="chip btn${state[k]===x?' on':''}" data-k="${k}" data-v="${esc(x)}">${esc(x)}<span class="c">${cnt(x)}</span></span>`).join('');
+      facets.appendChild(row);
+    });
+    const stat=document.createElement('div');stat.className='toolbar';
+    const sSucc=sel.filter(v=>v.outcome==='success').length,sScored=sel.filter(v=>v.outcome!=='unscored').length;
+    stat.innerHTML=`<span class="stat"><b>${sel.length}</b> of ${list.length} rollouts${sScored?` · <b>${sSucc}/${sScored}</b> succeeded (${Math.round(100*sSucc/sScored)}%)`:''}</span>`;
+    facets.appendChild(stat);
+    facets.querySelectorAll('.chip.btn').forEach(b=>b.onclick=()=>{state[b.dataset.k]=b.dataset.v||undefined;render();});
   };
-  if(tasks.length>1){
-    filter.innerHTML=`<span class="k">Task</span> <span class="chip btn" data-t="all">all<span class="c">${list.length}</span></span>`
-      +tasks.map(t=>`<span class="chip btn" data-t="${esc(t)}">${esc(t)}<span class="c">${cnt(t)}</span></span>`).join('');
-    filter.querySelectorAll('.chip').forEach(b=>b.onclick=()=>render(b.dataset.t));
-  }
-  render('all');
+  // pause every other clip when one starts, so the page never plays many videos at once
+  grid.addEventListener('play',e=>{grid.querySelectorAll('video').forEach(v=>{if(v!==e.target)v.pause();});},true);
+  render();
 }).catch(()=>{document.getElementById('grid').innerHTML='<p class="empty">Could not load the rollout list.</p>';});
 </script>
 </body>
