@@ -152,7 +152,7 @@ const $=id=>document.getElementById(id);
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 // Embodiments (camera rigs) in presentation order; rigs missing from this list are appended in the
 // order they appear in videos.json. The camera list under each heading comes from the clips themselves.
-const EMBODIMENTS=['UMI','iPhUMI','iPhUMI (new gripper)','GenRobot','RealSense','YAM bimanual','Humanoid (phone video)'];
+const EMBODIMENTS=['UMI','iPhUMI','GenRobot','New gripper + iPhone','RealSense','YAM bimanual','Humanoid (phone video)'];
 const FACETS=[['policy','Policy'],['outcome','Outcome']];   // rig and task are chosen in the tree
 const OUTCOME={success:['pass','success'],failure:['fail','failure']};
 const fmtT=s=>s==null?'':(s>=60?`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`:`${s.toFixed(1)} s`);
