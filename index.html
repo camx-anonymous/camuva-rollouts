@@ -3,11 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CAMUVA Rollouts</title>
-<meta name="description" content="Rollout videos for CAMUVA (anonymous submission).">
+<title>CamUVA Rollouts</title>
+<meta name="description" content="Policy rollout videos for CamUVA across handheld, single-arm, bimanual and humanoid rigs, with every camera view time-synced in one clip (anonymous submission).">
 <link rel="stylesheet" href="https://camx-anonymous.github.io/site.css">
 <style>
-/* page-specific: the shared chrome (tokens, header, chips, cards, footer) comes from site.css on the CAMX site */
+/* Layout mirrors the CAMX landing page (hero → browse → footer); the chrome itself comes from site.css. */
+/* ---------- hero ---------- */
+.hero{padding-top:96px;padding-bottom:64px}
+.hero h1{font-size:clamp(40px,6.2vw,80px);line-height:1;letter-spacing:-.035em;font-weight:500;margin:0;max-width:1000px;text-wrap:balance}
+.hero .lede{font-size:19px;line-height:1.55;color:var(--ink2);max-width:600px;margin:28px 0 0;text-wrap:pretty}
+.hero .eyebrow{margin-bottom:24px}
+.ctas{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:24px;margin-top:72px;padding-top:24px;border-top:1px solid var(--line)}
+.stats .v{font-size:36px;font-weight:500;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats .k{font-size:13px;color:var(--ink3);margin-top:4px}
+@media (max-width:640px){.hero{padding-top:56px;padding-bottom:40px}.stats{margin-top:48px;grid-template-columns:repeat(2,1fr)}.stats .v{font-size:30px}}
+
+/* ---------- browse ---------- */
+#browse{padding-top:40px;padding-bottom:96px;scroll-margin-top:60px}
+.bhead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+.bhead h2{margin:0}
+.crumbs{display:flex;align-items:center;gap:8px;font:400 12px/1.4 var(--mono);color:var(--ink4);margin-top:10px;flex-wrap:wrap}
+.crumbs b{font:500 15px/1 var(--sans);color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink3);font-size:13px}
+.facets{display:flex;flex-direction:column;gap:4px;margin:0 0 28px}
+.facets .toolbar{margin:0}
+.grid{gap:32px 20px}
 .card .vid{aspect-ratio:4/3}
 .card .vid video{cursor:pointer}
 .card .title{word-break:normal;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
@@ -17,51 +38,83 @@
 .chip.in{background:var(--good);color:#fff}
 .chip.out{background:var(--chipbg);color:var(--ink3);border-color:var(--line)}
 .card .meta .instr{color:var(--ink3);font-style:italic}
-.facets{display:flex;flex-direction:column;gap:4px;margin:10px 0 12px}
-.facets .toolbar{margin:0}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink2);font-size:13px;margin:0 0 14px}
-.topbar nav a.soon{color:var(--ink3);cursor:default}
 .empty{grid-column:1/-1;color:var(--ink3);padding:30px;text-align:center;border:1px dashed var(--line);border-radius:8px;background:var(--chipbg)}
+
+/* ---------- footer ---------- */
+footer{margin:0}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot nav{display:flex;gap:20px;flex-wrap:wrap}
+.foot nav a{color:var(--ink3);text-decoration:none}
+.foot nav a:hover{color:var(--accent)}
 </style>
 </head>
 <body>
+
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="./"><span class="mark"></span><span class="name">CAMUVA</span></a>
     <nav aria-label="Sections">
-      <a href="#rollouts" aria-current="page">Rollouts</a>
-      <a href="#" class="soon">Paper (coming soon)</a>
-      <a href="https://github.com/camx-anonymous/camuva-rollouts">Code</a>
+      <a href="#browse">Rollouts</a>
     </nav>
     <a class="button primary cta" href="https://camx-anonymous.github.io/">CAMX Dataset</a>
   </div>
 </header>
 
-<main class="wrap" id="rollouts">
-  <header>
-    <h1>CAMUVA Rollouts <small>policy rollout videos</small></h1>
-  </header>
-  <div class="facets" id="facets"></div>
-  <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span></div>
-  <div class="grid" id="grid"><p class="empty">Loading…</p></div>
-  <footer>This page is anonymized for review. <span id="footInfo"></span></footer>
+<main>
+  <section class="hero wrap" id="overview">
+    <div class="eyebrow"><span>Policy rollouts</span><span>·</span><span>Anonymous submission</span><span>·</span><span>Under review</span></div>
+    <h1>CamUVA Rollouts</h1>
+    <p class="lede">Time-synced multi-view clips of every evaluation episode</p>
+    <div class="ctas">
+      <a class="button accent lg" href="#browse">Browse rollouts</a>
+      <a class="button lg" href="https://camx-anonymous.github.io/">CAMX Dataset</a>
+    </div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="wrap" id="browse">
+    <div class="bhead">
+      <div>
+        <h2>Browse rollouts</h2>
+        <div class="crumbs" id="crumbs"></div>
+      </div>
+      <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span></div>
+    </div>
+    <div class="facets" id="facets"></div>
+    <div class="grid" id="grid"><p class="empty">Loading…</p></div>
+  </section>
+
+  <footer>
+    <div class="wrap foot">
+      <span id="footInfo">CamUVA Rollouts · anonymized for review</span>
+      <nav>
+        <a href="https://github.com/camx-anonymous/camuva-rollouts">GitHub</a>
+        <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
+      </nav>
+    </div>
+  </footer>
 </main>
 <script>
 // videos.json: [{ src, poster, title, task, rig, robot, policy, outcome: "success"|"failure"|null, instruction,
 //                 episode, seconds, width, height, views: [{label, fed}], note }]
 // Built by tools/build_videos.py from the raw rollout episodes.
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=id=>document.getElementById(id);
 const FACETS=[['rig','Rig'],['task','Task'],['policy','Policy'],['outcome','Outcome']];
 const OUTCOME={success:['pass','success'],failure:['fail','failure']};
 const fmtT=s=>s==null?'':(s>=60?`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`:`${s.toFixed(1)} s`);
+const fmtH=s=>{const h=s/3600;return h>=10?h.toFixed(1):h.toFixed(2)};
 const state={};
 fetch('videos.json').then(r=>r.json()).then(list=>{
-  const grid=document.getElementById('grid'),facets=document.getElementById('facets'),foot=document.getElementById('footInfo');
+  const grid=$('grid'),facets=$('facets'),crumbs=$('crumbs');
   if(!list.length){grid.innerHTML='<p class="empty">No rollout videos yet.</p>';return;}
   list.forEach(v=>{if(!v.outcome)v.outcome='unscored';});
   const vals=k=>[...new Set(list.map(v=>v[k]).filter(Boolean))];
   const nSucc=list.filter(v=>v.outcome==='success').length,nScored=list.filter(v=>v.outcome!=='unscored').length;
-  foot.textContent=`${list.length} rollouts across ${vals('task').length} tasks and ${vals('rig').length} rigs · ${nSucc}/${nScored} scored episodes succeeded`;
+  const secs=list.reduce((a,v)=>a+(v.seconds||0),0);
+  $('stats').innerHTML=[[list.length,'rollouts'],[fmtH(secs)+' h','of video'],[vals('task').length,'tasks'],[vals('rig').length,'rigs'],[nScored?Math.round(100*nSucc/nScored)+'%':'–','success rate']]
+    .map(([v,k])=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
+  $('footInfo').textContent=`CamUVA Rollouts · anonymized for review · ${list.length} rollouts, ${vals('task').length} tasks, ${vals('rig').length} rigs`;
   const selected=()=>list.filter(v=>FACETS.every(([k])=>!state[k]||v[k]===state[k]));
   const render=()=>{
     const sel=selected();
@@ -83,6 +136,9 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
         </div>`;
       grid.appendChild(c);
     });
+    // count line under the heading, in the place the CAMX page keeps its breadcrumb
+    const sSucc=sel.filter(v=>v.outcome==='success').length,sScored=sel.filter(v=>v.outcome!=='unscored').length;
+    crumbs.innerHTML=`<span><b>${sel.length}</b> of ${list.length} rollouts</span>${sScored?`<span>·</span><span><b>${sSucc}/${sScored}</b> succeeded (${Math.round(100*sSucc/sScored)}%)</span>`:''}`;
     // facet chips: counts reflect the other active filters, so a chip shows how many cards it would leave
     facets.innerHTML='';
     FACETS.forEach(([k,label])=>{
@@ -94,16 +150,12 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
         +vs.map(x=>`<span class="chip btn${state[k]===x?' on':''}" data-k="${k}" data-v="${esc(x)}">${esc(x)}<span class="c">${cnt(x)}</span></span>`).join('');
       facets.appendChild(row);
     });
-    const stat=document.createElement('div');stat.className='toolbar';
-    const sSucc=sel.filter(v=>v.outcome==='success').length,sScored=sel.filter(v=>v.outcome!=='unscored').length;
-    stat.innerHTML=`<span class="stat"><b>${sel.length}</b> of ${list.length} rollouts${sScored?` · <b>${sSucc}/${sScored}</b> succeeded (${Math.round(100*sSucc/sScored)}%)`:''}</span>`;
-    facets.appendChild(stat);
     facets.querySelectorAll('.chip.btn').forEach(b=>b.onclick=()=>{state[b.dataset.k]=b.dataset.v||undefined;render();});
   };
   // pause every other clip when one starts, so the page never plays many videos at once
   grid.addEventListener('play',e=>{grid.querySelectorAll('video').forEach(v=>{if(v!==e.target)v.pause();});},true);
   render();
-}).catch(()=>{document.getElementById('grid').innerHTML='<p class="empty">Could not load the rollout list.</p>';});
+}).catch(()=>{$('grid').innerHTML='<p class="empty">Could not load the rollout list.</p>';});
 </script>
 </body>
 </html>
