@@ -60,6 +60,8 @@ RUNS = {
 DUPLICATES = {'UMI_cup': 'UMI_uva-cup-arrangement'}
 # runs whose recorded caption does not describe the scene (a stale prompt string); no instruction is shown
 CAPTION_MISMATCH = {'iPhUMI_banana-in-box'}
+# (run, episode) pairs left out of the gallery on purpose
+EXCLUDE = {('UMI_uva-towel', 20), ('UMI_uva-towel', 21), ('YAM_plates-on-rack', 10)}
 PHONE_RUN = ('box_task', 'Humanoid (phone video)', 'box task', 'CAMUVA', 'humanoid')
 
 THIRD = 'third_person_camera_0'
@@ -367,6 +369,8 @@ def main():
         for ep in sorted(rdir.glob('episode_*')):
             n = int(ep.name.split('_')[-1])
             if want_eps is not None and n not in want_eps:
+                continue
+            if (run, n) in EXCLUDE:
                 continue
             meta = read_meta(ep)
             if not (ep / f'{THIRD}.zarr' / 'main.mp4').exists():

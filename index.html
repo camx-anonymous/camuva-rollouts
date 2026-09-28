@@ -30,7 +30,6 @@
 </nav>
 <header><div class="wrap">
   <h1>CAMUVA Rollouts <small>policy rollout videos</small></h1>
-  <p class="sub">Anonymous Authors · Under Review · real-robot rollouts of CAMUVA policies. One clip per evaluation episode, unedited and uncut. Each tile is one camera on the rig; all tiles are resampled onto a common 30 fps clock from their per-frame timestamps, anchored to the fixed third-person camera in the first tile. Tiles marked <b>policy input</b> are the camera streams the policy received during the rollout; the third-person camera is for the viewer only and is never seen by the policy. Episodes are labeled success or failure as scored during the evaluation; every episode of every run is shown, including failures.</p>
   <nav class="links">
     <a href="#">Paper (coming soon)</a>
     <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
@@ -40,7 +39,7 @@
 
 <main class="wrap">
   <div class="facets" id="facets"></div>
-  <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span> <span class="muted">a dimmed tile with a red marker means that camera dropped frames and its last frame is being held</span></div>
+  <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span></div>
   <div class="grid" id="grid"><p class="empty">Loading…</p></div>
   <footer>This page is anonymized for review. <span id="footInfo"></span></footer>
 </main>

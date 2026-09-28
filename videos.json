@@ -7200,58 +7200,6 @@
   "seconds": 11.4
  },
  {
-  "src": "videos/umi-uva-towel__ep20.mp4",
-  "poster": "posters/umi-uva-towel__ep20.jpg",
-  "title": "towel fold \u00b7 UMI \u00b7 ep 20",
-  "task": "towel fold",
-  "rig": "UMI",
-  "robot": "ARX5",
-  "policy": "CAMUVA",
-  "outcome": "success",
-  "instruction": "Grasp the left side of the towel on the table with the gripper, then fold the towel in half by folding it towards the right.",
-  "episode": 20,
-  "run": "UMI_uva-towel",
-  "views": [
-   {
-    "label": "third-person cam",
-    "fed": false
-   },
-   {
-    "label": "wrist cam",
-    "fed": true
-   }
-  ],
-  "width": 960,
-  "height": 392,
-  "seconds": 13.3
- },
- {
-  "src": "videos/umi-uva-towel__ep21.mp4",
-  "poster": "posters/umi-uva-towel__ep21.jpg",
-  "title": "towel fold \u00b7 UMI \u00b7 ep 21",
-  "task": "towel fold",
-  "rig": "UMI",
-  "robot": "ARX5",
-  "policy": "CAMUVA",
-  "outcome": "success",
-  "instruction": "Grasp the left side of the towel on the table with the gripper, then fold the towel in half by folding it towards the right.",
-  "episode": 21,
-  "run": "UMI_uva-towel",
-  "views": [
-   {
-    "label": "third-person cam",
-    "fed": false
-   },
-   {
-    "label": "wrist cam",
-    "fed": true
-   }
-  ],
-  "width": 960,
-  "height": 392,
-  "seconds": 13.8
- },
- {
   "src": "videos/yam-plates-on-rack__ep00.mp4",
   "poster": "posters/yam-plates-on-rack__ep00.jpg",
   "title": "plates in rack \u00b7 YAM bimanual \u00b7 ep 00",
@@ -7590,40 +7538,6 @@
   "width": 960,
   "height": 752,
   "seconds": 97.9
- },
- {
-  "src": "videos/yam-plates-on-rack__ep10.mp4",
-  "poster": "posters/yam-plates-on-rack__ep10.jpg",
-  "title": "plates in rack \u00b7 YAM bimanual \u00b7 ep 10",
-  "task": "plates in rack",
-  "rig": "YAM bimanual",
-  "robot": "YAM (bimanual)",
-  "policy": "CAMUVA",
-  "outcome": "success",
-  "instruction": "Load the plates into the dish rack.",
-  "episode": 10,
-  "run": "YAM_plates-on-rack",
-  "views": [
-   {
-    "label": "third-person cam",
-    "fed": false
-   },
-   {
-    "label": "head cam (D405)",
-    "fed": true
-   },
-   {
-    "label": "left wrist cam (D405)",
-    "fed": true
-   },
-   {
-    "label": "right wrist cam (D405)",
-    "fed": true
-   }
-  ],
-  "width": 960,
-  "height": 752,
-  "seconds": 73.8
  },
  {
   "src": "videos/yam-plates-in-rack-abc-vla-baseline__ep00.mp4",
