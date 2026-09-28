@@ -26,18 +26,62 @@
 .crumbs{display:flex;align-items:center;gap:8px;font:400 12px/1.4 var(--mono);color:var(--ink4);margin-top:10px;flex-wrap:wrap}
 .crumbs b{font:500 15px/1 var(--sans);color:var(--ink)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink3);font-size:13px}
-.facets{display:flex;flex-direction:column;gap:4px;margin:0 0 28px}
+/* two-column browse: sticky embodiment → task tree on the left (same as the CAMX page), grouped results on the right */
+.browse{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start}
+.tree{position:sticky;top:84px;display:flex;flex-direction:column;gap:4px;flex:1 1 240px;max-width:280px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain}
+@media (max-width:760px){.tree{position:static;max-width:none;flex-basis:100%;max-height:none}}
+.tree button{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px 7px 8px;margin-left:-8px;font-size:15px;font-weight:500;border-radius:4px;color:var(--ink);min-width:0}
+.tree button:hover{color:var(--accent)}
+.tree button .c{font:400 12px/1 var(--mono);color:var(--ink4);flex:none}
+.tree button.on{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.tree .lab{display:flex;align-items:center;gap:10px;min-width:0}
+.tree .lab span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tree .dia{width:9px;height:9px;background:var(--ink);transform:rotate(45deg);flex:none}
+.tree .tick{width:12px;height:1px;background:var(--line-hi);flex:none}
+.tree .lvl1{margin-left:14px;border-left:1px solid var(--line-hi);display:flex;flex-direction:column;gap:2px;padding:4px 0}
+.tree .lvl1>div{display:flex;flex-direction:column}
+.tree .lvl1>div>button{margin-left:0}
+.tree .lvl2{margin-left:34px;border-left:1px solid var(--line);display:flex;flex-direction:column}
+.tree .lvl2 button{font-size:13px;font-weight:400;margin-left:0;gap:8px}
+.tree .lvl2 .tick{width:10px;background:var(--line)}
+.tree .lvl2 button .c{font-size:11px}
+.results{flex:999 1 480px;min-width:0}
+.facets{display:flex;flex-direction:column;gap:4px;margin:0 0 8px}
 .facets .toolbar{margin:0}
-.grid{gap:32px 20px}
+/* embodiment section */
+.emb{padding:40px 0 8px;scroll-margin-top:72px}
+.emb+.emb{border-top:1px solid var(--line)}
+.results>.emb:first-of-type{padding-top:24px}
+.emb .ehead{display:flex;flex-wrap:wrap;gap:8px 32px;align-items:flex-end;justify-content:space-between;margin-bottom:8px}
+.emb .kicker{font:400 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 8px}
+.emb h2{margin:0;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.emb h2 .robot{font:400 14px/1.4 var(--mono);color:var(--ink3);letter-spacing:0}
+.emb .enums{display:flex;gap:24px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.emb .enums .v{font-size:22px;font-weight:500;letter-spacing:-.02em;line-height:1.1}
+.emb .enums .k{font-size:12px;color:var(--ink3)}
+.emb .edesc{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink3);font-size:13px;margin:6px 0 0}
+.emb .edesc .k{color:var(--ink3);font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em}
+.emb .edesc .chips{display:flex;flex-wrap:wrap;gap:4px}
+.emb .tasks{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
+/* task subsection */
+.task{padding:28px 0 8px;scroll-margin-top:72px}
+.task .thead{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.task h3{margin:0;font-size:17px;display:flex;align-items:baseline;gap:10px}
+.task h3 .n{font:400 12px/1 var(--mono);color:var(--ink4)}
+.task .rate{font:400 12.5px/1.4 var(--mono);color:var(--ink3)}
+.task .rate b{color:var(--ink);font-weight:500}
+.task .rate .bar{display:inline-block;width:64px;height:4px;border-radius:2px;background:var(--barbg);vertical-align:middle;margin:0 6px 0 2px;overflow:hidden}
+.task .rate .bar i{display:block;height:100%;background:var(--good)}
+.task .instr{flex-basis:100%;color:var(--ink3);font-style:italic;font-size:13px;margin-top:2px}
+.grid{gap:28px 20px;grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+@media (max-width:480px){.grid{grid-template-columns:1fr}}
 .card .vid{aspect-ratio:4/3}
 .card .vid video{cursor:pointer}
 .card .title{word-break:normal;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.card .title .ep{color:var(--ink3);font-weight:normal;font-size:12px}
+.card .title .ep{color:var(--ink);font-weight:500}
 .card .title .chip{margin-left:auto}
-.card .meta .views{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .chip.in{background:var(--good);color:#fff}
 .chip.out{background:var(--chipbg);color:var(--ink3);border-color:var(--line)}
-.card .meta .instr{color:var(--ink3);font-style:italic}
 .empty{grid-column:1/-1;color:var(--ink3);padding:30px;text-align:center;border:1px dashed var(--line);border-radius:8px;background:var(--chipbg)}
 
 /* ---------- footer ---------- */
@@ -80,8 +124,13 @@ footer{margin:0}
       </div>
       <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span></div>
     </div>
-    <div class="facets" id="facets"></div>
-    <div class="grid" id="grid"><p class="empty">Loading…</p></div>
+    <div class="browse">
+      <aside class="tree" id="tree" aria-label="Embodiments and tasks"></aside>
+      <div class="results">
+        <div class="facets" id="facets"></div>
+        <div id="groups"><p class="empty">Loading…</p></div>
+      </div>
+    </div>
   </section>
 
   <footer>
@@ -100,50 +149,113 @@ footer{margin:0}
 // Built by tools/build_videos.py from the raw rollout episodes.
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const $=id=>document.getElementById(id);
-const FACETS=[['rig','Rig'],['task','Task'],['policy','Policy'],['outcome','Outcome']];
+const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+// Embodiments (camera rigs) in presentation order; rigs missing from this list are appended in the
+// order they appear in videos.json. The camera list under each heading comes from the clips themselves.
+const EMBODIMENTS=['UMI','iPhUMI','iPhUMI (new gripper)','GenRobot','RealSense','YAM bimanual','Humanoid (phone video)'];
+const FACETS=[['policy','Policy'],['outcome','Outcome']];   // rig and task are chosen in the tree
 const OUTCOME={success:['pass','success'],failure:['fail','failure']};
 const fmtT=s=>s==null?'':(s>=60?`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`:`${s.toFixed(1)} s`);
 const fmtH=s=>{const h=s/3600;return h>=10?h.toFixed(1):h.toFixed(2)};
-const state={};
+const pct=(a,b)=>b?Math.round(100*a/b)+'%':'–';
+const S={rig:null,task:null};                // tree selection
+const state={};                              // facet chips
 fetch('videos.json').then(r=>r.json()).then(list=>{
-  const grid=$('grid'),facets=$('facets'),crumbs=$('crumbs');
-  if(!list.length){grid.innerHTML='<p class="empty">No rollout videos yet.</p>';return;}
+  const groups=$('groups'),facets=$('facets'),crumbs=$('crumbs'),tree=$('tree');
+  if(!list.length){groups.innerHTML='<p class="empty">No rollout videos yet.</p>';return;}
   list.forEach(v=>{if(!v.outcome)v.outcome='unscored';});
-  const vals=k=>[...new Set(list.map(v=>v[k]).filter(Boolean))];
-  const nSucc=list.filter(v=>v.outcome==='success').length,nScored=list.filter(v=>v.outcome!=='unscored').length;
+  const vals=(k,rows=list)=>[...new Set(rows.map(v=>v[k]).filter(Boolean))];
+  const uniq=a=>[...new Set(a)];
+  const rigs=uniq([...EMBODIMENTS.filter(r=>list.some(v=>v.rig===r)),...vals('rig')]);
+  const succ=rows=>{const n=rows.filter(v=>v.outcome==='success').length,d=rows.filter(v=>v.outcome!=='unscored').length;return {n,d,p:pct(n,d)}};
   const secs=list.reduce((a,v)=>a+(v.seconds||0),0);
-  $('stats').innerHTML=[[list.length,'rollouts'],[fmtH(secs)+' h','of video'],[vals('task').length,'tasks'],[vals('rig').length,'rigs'],[nScored?Math.round(100*nSucc/nScored)+'%':'–','success rate']]
+  const all=succ(list);
+  $('stats').innerHTML=[[list.length,'rollouts'],[fmtH(secs)+' h','of video'],[rigs.length,'embodiments'],[vals('task').length,'tasks'],[all.p,'success rate']]
     .map(([v,k])=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
-  $('footInfo').textContent=`CamUVA Rollouts · anonymized for review · ${list.length} rollouts, ${vals('task').length} tasks, ${vals('rig').length} rigs`;
-  const selected=()=>list.filter(v=>FACETS.every(([k])=>!state[k]||v[k]===state[k]));
+  $('footInfo').textContent=`CamUVA Rollouts · anonymized for review · ${list.length} rollouts, ${vals('task').length} tasks, ${rigs.length} embodiments`;
+
+  const passFacets=v=>FACETS.every(([k])=>!state[k]||v[k]===state[k]);
+  const inScope=v=>(!S.rig||v.rig===S.rig)&&(!S.task||v.task===S.task);
+  const selected=()=>list.filter(v=>inScope(v)&&passFacets(v));
+
+  const card=v=>{
+    const oc=OUTCOME[v.outcome];
+    const ar=v.width&&v.height?` style="aspect-ratio:${v.width}/${v.height}"`:'';
+    const c=document.createElement('div');c.className='card';
+    c.innerHTML=`<div class="vid"${ar}><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline controls preload="none"></video></div>
+      <div class="title"><span class="ep">${v.episode!=null?`Episode ${String(v.episode).padStart(2,'0')}`:esc(v.title||'')}</span>${v.seconds!=null?`<span class="muted">· ${fmtT(v.seconds)}</span>`:''}${oc?`<span class="chip ${oc[0]}">${oc[1]}</span>`:''}</div>
+      <div class="meta">
+        ${v.policy?`<div><span class="k">Policy</span> ${esc(v.policy)}</div>`:''}
+        ${v.note?`<div>${esc(v.note)}</div>`:''}
+      </div>`;
+    return c;
+  };
+
+  const renderTree=()=>{
+    let h=`<button class="${!S.rig?'on':''}" data-rig=""><span class="lab"><span class="dia"></span><span>All embodiments</span></span><span class="c">${list.length}</span></button><div class="lvl1">`;
+    rigs.forEach(r=>{
+      const rows=list.filter(v=>v.rig===r);
+      h+=`<div><button class="${S.rig===r&&!S.task?'on':''}" data-rig="${esc(r)}"><span class="lab"><span class="tick"></span><span>${esc(r)}</span></span><span class="c">${rows.length}</span></button><div class="lvl2">`
+        +vals('task',rows).map(t=>{const n=rows.filter(v=>v.task===t).length;
+          return `<button class="${S.rig===r&&S.task===t?'on':''}" data-rig="${esc(r)}" data-task="${esc(t)}" title="${esc(r)} · ${esc(t)} · ${n} rollouts"><span class="lab"><span class="tick"></span><span>${esc(t)}</span></span><span class="c">${n}</span></button>`}).join('')
+        +`</div></div>`;
+    });
+    tree.innerHTML=h+'</div>';
+    tree.querySelectorAll('button').forEach(b=>b.onclick=()=>{S.rig=b.dataset.rig||null;S.task=b.dataset.task||null;render();$('browse').scrollIntoView({behavior:'smooth',block:'start'});});
+  };
+
   const render=()=>{
     const sel=selected();
-    grid.innerHTML='';
-    if(!sel.length){grid.innerHTML='<p class="empty">No rollouts match these filters.</p>';}
-    sel.forEach(v=>{
-      const c=document.createElement('div');c.className='card';
-      const oc=OUTCOME[v.outcome];
-      const ar=v.width&&v.height?` style="aspect-ratio:${v.width}/${v.height}"`:'';
-      const views=(v.views||[]).map(x=>`<span class="chip ${x.fed?'in':'out'}">${esc(x.label)}</span>`).join('');
-      c.innerHTML=`<div class="vid"${ar}><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline controls preload="none"></video></div>
-        <div class="title"><span>${esc(v.task||v.title||'')}</span><span class="ep">${v.episode!=null?`ep ${String(v.episode).padStart(2,'0')}`:''}</span>${oc?`<span class="chip ${oc[0]}">${oc[1]}</span>`:''}</div>
-        <div class="meta">
-          ${v.rig?`<div><span class="k">Rig</span> ${esc(v.rig)}${v.robot?` <span class="muted">· ${esc(v.robot)}</span>`:''}</div>`:''}
-          ${v.policy?`<div><span class="k">Policy</span> ${esc(v.policy)}${v.seconds!=null?` <span class="muted">· ${fmtT(v.seconds)}</span>`:''}</div>`:''}
-          ${views?`<div class="views"><span class="k">Views</span> ${views}</div>`:''}
-          ${v.instruction?`<div class="instr">“${esc(v.instruction)}”</div>`:''}
-          ${v.note?`<div>${esc(v.note)}</div>`:''}
-        </div>`;
-      grid.appendChild(c);
+    groups.innerHTML='';
+    if(!sel.length)groups.innerHTML='<p class="empty">No rollouts match these filters.</p>';
+    rigs.forEach((r,ri)=>{
+      const rowsAll=list.filter(v=>v.rig===r);          // whole embodiment, for the header numbers
+      const rows=sel.filter(v=>v.rig===r);
+      if(!rows.length)return;
+      const tasks=vals('task',rowsAll);
+      const sr=succ(rowsAll);
+      const views=uniq(rowsAll.flatMap(v=>(v.views||[]).map(x=>`${x.fed?1:0}|${x.label}`))).map(s=>{const [f,l]=s.split('|');return `<span class="chip ${+f?'in':'out'}">${esc(l)}</span>`}).join('');
+      const sec=document.createElement('section');sec.className='emb';sec.id='emb-'+slug(r);
+      sec.innerHTML=`<div class="ehead">
+          <div>
+            <div class="kicker">Embodiment ${String(ri+1).padStart(2,'0')} / ${String(rigs.length).padStart(2,'0')}</div>
+            <h2>${esc(r)}${rowsAll[0].robot?`<span class="robot">${esc(rowsAll[0].robot)}</span>`:''}</h2>
+            ${views?`<div class="edesc"><span class="k">Cameras</span><span class="chips">${views}</span></div>`:''}
+          </div>
+          <div class="enums">
+            <div><div class="v">${rowsAll.length}</div><div class="k">rollouts</div></div>
+            <div><div class="v">${tasks.length}</div><div class="k">${tasks.length===1?'task':'tasks'}</div></div>
+            <div><div class="v">${sr.p}</div><div class="k">${sr.d?`success (${sr.n}/${sr.d})`:'unscored'}</div></div>
+          </div>
+        </div>
+        ${tasks.length>1?`<div class="tasks">${tasks.map(t=>`<a class="chip btn${S.task===t?' on':''}" href="#task-${slug(r)}-${slug(t)}">${esc(t)}<span class="c">${rowsAll.filter(v=>v.task===t).length}</span></a>`).join('')}</div>`:''}`;
+      tasks.forEach(t=>{
+        const trAll=rowsAll.filter(v=>v.task===t),tr=rows.filter(v=>v.task===t);
+        if(!tr.length)return;
+        const ts=succ(trAll);
+        const instr=vals('instruction',trAll)[0];
+        const pols=vals('policy',trAll);
+        const div=document.createElement('div');div.className='task';div.id=`task-${slug(r)}-${slug(t)}`;
+        div.innerHTML=`<div class="thead">
+            <h3>${esc(t)}<span class="n">${tr.length===trAll.length?trAll.length:`${tr.length} of ${trAll.length}`} ${trAll.length===1?'rollout':'rollouts'}${pols.length>1?` · ${pols.length} policies`:''}</span></h3>
+            ${ts.d?`<span class="rate"><span class="bar"><i style="width:${Math.round(100*ts.n/ts.d)}%"></i></span><b>${ts.n}/${ts.d}</b> succeeded (${ts.p})</span>`:'<span class="rate">not scored</span>'}
+            ${instr?`<div class="instr">“${esc(instr)}”</div>`:''}
+          </div><div class="grid"></div>`;
+        const g=div.querySelector('.grid');tr.forEach(v=>g.appendChild(card(v)));
+        sec.appendChild(div);
+      });
+      groups.appendChild(sec);
     });
     // count line under the heading, in the place the CAMX page keeps its breadcrumb
-    const sSucc=sel.filter(v=>v.outcome==='success').length,sScored=sel.filter(v=>v.outcome!=='unscored').length;
-    crumbs.innerHTML=`<span><b>${sel.length}</b> of ${list.length} rollouts</span>${sScored?`<span>·</span><span><b>${sSucc}/${sScored}</b> succeeded (${Math.round(100*sSucc/sScored)}%)</span>`:''}`;
-    // facet chips: counts reflect the other active filters, so a chip shows how many cards it would leave
+    const ss=succ(sel);
+    const path=[S.rig,S.task].filter(Boolean).map(x=>`<span>›</span><span>${esc(x)}</span>`).join('');
+    crumbs.innerHTML=`<span><b>${sel.length}</b> of ${list.length} rollouts</span>${path}${ss.d?`<span>·</span><span><b>${ss.n}/${ss.d}</b> succeeded (${ss.p})</span>`:''}`;
+    // facet chips: counts reflect the tree scope and the other active filters, so a chip shows how many cards it would leave
     facets.innerHTML='';
     FACETS.forEach(([k,label])=>{
-      const vs=vals(k); if(vs.length<2)return;
-      const others=list.filter(v=>FACETS.every(([o])=>o===k||!state[o]||v[o]===state[o]));
+      const scope=list.filter(inScope);
+      const vs=vals(k,scope); if(vs.length<2)return;
+      const others=scope.filter(v=>FACETS.every(([o])=>o===k||!state[o]||v[o]===state[o]));
       const cnt=x=>others.filter(v=>v[k]===x).length;
       const row=document.createElement('div');row.className='toolbar';
       row.innerHTML=`<span class="k">${label}</span> <span class="chip btn${state[k]?'':' on'}" data-k="${k}" data-v="">all<span class="c">${others.length}</span></span>`
@@ -151,11 +263,14 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
       facets.appendChild(row);
     });
     facets.querySelectorAll('.chip.btn').forEach(b=>b.onclick=()=>{state[b.dataset.k]=b.dataset.v||undefined;render();});
+    renderTree();
   };
   // pause every other clip when one starts, so the page never plays many videos at once
-  grid.addEventListener('play',e=>{grid.querySelectorAll('video').forEach(v=>{if(v!==e.target)v.pause();});},true);
+  groups.addEventListener('play',e=>{groups.querySelectorAll('video').forEach(v=>{if(v!==e.target)v.pause();});},true);
   render();
-}).catch(()=>{$('grid').innerHTML='<p class="empty">Could not load the rollout list.</p>';});
+  // deep links: #emb-<rig> or #task-<rig>-<task> scroll to the section once it exists
+  if(location.hash){const el=document.querySelector(location.hash.replace(/[^#\w-]/g,''));if(el)el.scrollIntoView();}
+}).catch(()=>{$('groups').innerHTML='<p class="empty">Could not load the rollout list.</p>';});
 </script>
 </body>
 </html>
