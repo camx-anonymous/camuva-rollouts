@@ -26,7 +26,6 @@
     <a href="#">Paper (coming soon)</a>
     <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
     <a href="https://github.com/camx-anonymous/camuva-rollouts">Code</a>
-    <a href="videos.json">videos.json</a>
   </nav>
 </div></header>
 
@@ -61,7 +60,7 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
     filter.querySelectorAll('.chip').forEach(b=>b.onclick=()=>render(b.dataset.t));
   }
   render('all');
-}).catch(()=>{document.getElementById('grid').innerHTML='<p class="empty">Could not load videos.json.</p>';});
+}).catch(()=>{document.getElementById('grid').innerHTML='<p class="empty">Could not load the rollout list.</p>';});
 </script>
 </body>
 </html>
