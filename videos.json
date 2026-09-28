@@ -23,13 +23,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 37.3
  },
@@ -57,13 +53,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 30.9
  },
@@ -91,13 +83,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 28.1
  },
@@ -125,13 +113,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 36.3
  },
@@ -159,13 +143,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 36.5
  },
@@ -193,13 +173,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 57.3
  },
@@ -227,13 +203,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 87.8
  },
@@ -261,13 +233,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 21.2
  },
@@ -295,13 +263,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 57.1
  },
@@ -329,13 +293,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 17.9
  },
@@ -363,13 +323,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 4.7
  },
@@ -397,13 +353,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 10.0
  },
@@ -431,13 +383,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 7.9
  },
@@ -465,13 +413,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.7
  },
@@ -499,13 +443,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 7.0
  },
@@ -533,13 +473,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 6.2
  },
@@ -567,13 +503,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 8.3
  },
@@ -601,13 +533,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 6.8
  },
@@ -635,13 +563,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 4.7
  },
@@ -669,13 +593,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.0
  },
@@ -703,13 +623,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 16.2
  },
@@ -737,13 +653,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 26.4
  },
@@ -771,13 +683,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 21.5
  },
@@ -805,13 +713,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 34.7
  },
@@ -839,13 +743,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 32.9
  },
@@ -873,13 +773,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 19.6
  },
@@ -907,13 +803,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 29.3
  },
@@ -941,13 +833,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 25.9
  },
@@ -975,13 +863,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 40.8
  },
@@ -1009,13 +893,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 35.0
  },
@@ -1043,13 +923,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 13.0
  },
@@ -1077,13 +953,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 10.4
  },
@@ -1111,13 +983,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 10.5
  },
@@ -1145,13 +1013,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 16.4
  },
@@ -1179,13 +1043,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 18.9
  },
@@ -1213,13 +1073,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 16.4
  },
@@ -1247,13 +1103,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 16.2
  },
@@ -1281,13 +1133,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 25.5
  },
@@ -1315,13 +1163,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 10.5
  },
@@ -1349,13 +1193,9 @@
    {
     "label": "wrist stereo cam R",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 13.4
  },
@@ -1383,13 +1223,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 23.6
  },
@@ -1417,13 +1253,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 15.6
  },
@@ -1451,13 +1283,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 26.4
  },
@@ -1485,13 +1313,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 35.5
  },
@@ -1519,13 +1343,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.2
  },
@@ -1553,13 +1373,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 30.1
  },
@@ -1587,13 +1403,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.1
  },
@@ -1621,13 +1433,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 11.6
  },
@@ -1655,13 +1463,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 42.0
  },
@@ -1689,13 +1493,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 45.0
  },
@@ -1723,13 +1523,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.2
  },
@@ -1757,13 +1553,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 9.4
  },
@@ -1791,13 +1583,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 10.7
  },
@@ -1825,13 +1613,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 12.1
  },
@@ -1859,13 +1643,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 12.2
  },
@@ -1893,13 +1673,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 10.7
  },
@@ -1927,13 +1703,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 12.2
  },
@@ -1961,13 +1733,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 12.6
  },
@@ -1995,13 +1763,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.3
  },
@@ -2029,13 +1793,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.1
  },
@@ -2063,13 +1823,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 19.8
  },
@@ -2097,13 +1853,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 41.7
  },
@@ -2131,13 +1883,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 17.3
  },
@@ -2165,13 +1913,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 18.5
  },
@@ -2199,13 +1943,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 30.2
  },
@@ -2233,13 +1973,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 15.5
  },
@@ -2267,13 +2003,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 12.5
  },
@@ -2301,13 +2033,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 19.0
  },
@@ -2335,13 +2063,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 19.9
  },
@@ -2369,13 +2093,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 25.9
  },
@@ -2403,13 +2123,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 15.7
  },
@@ -2437,13 +2153,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 22.8
  },
@@ -2471,13 +2183,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 12.5
  },
@@ -2505,13 +2213,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 49.7
  },
@@ -2539,13 +2243,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 11.8
  },
@@ -2573,13 +2273,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 16.0
  },
@@ -2607,13 +2303,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 22.9
  },
@@ -2641,13 +2333,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 10.0
  },
@@ -2675,13 +2363,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 12.5
  },
@@ -2709,13 +2393,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 9.6
  },
@@ -2743,13 +2423,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 17.6
  },
@@ -2777,13 +2453,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 35.2
  },
@@ -2811,13 +2483,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 17.8
  },
@@ -2845,13 +2513,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 12.3
  },
@@ -2879,13 +2543,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 39.6
  },
@@ -2913,13 +2573,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 16.2
  },
@@ -2947,13 +2603,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 13.7
  },
@@ -2981,13 +2633,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 13.7
  },
@@ -3015,13 +2663,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 16.1
  },
@@ -3049,13 +2693,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 13.2
  },
@@ -3083,13 +2723,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 19.8
  },
@@ -3117,13 +2753,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 24.2
  },
@@ -3151,13 +2783,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 31.6
  },
@@ -3185,13 +2813,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.6
  },
@@ -3219,13 +2843,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 24.9
  },
@@ -3253,13 +2873,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 42.5
  },
@@ -3287,13 +2903,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 42.5
  },
@@ -3321,13 +2933,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 11.7
  },
@@ -3355,13 +2963,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 28.3
  },
@@ -3389,13 +2993,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 10.3
  },
@@ -3423,13 +3023,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 37.1
  },
@@ -3457,13 +3053,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 23.4
  },
@@ -3491,13 +3083,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 84.9
  },
@@ -3525,13 +3113,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 70.8
  },
@@ -3559,13 +3143,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 15.5
  },
@@ -3593,13 +3173,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 35.5
  },
@@ -3627,13 +3203,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 13.6
  },
@@ -3661,13 +3233,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 25.3
  },
@@ -3695,13 +3263,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 47.3
  },
@@ -3729,13 +3293,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 24.0
  },
@@ -3763,13 +3323,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 16.1
  },
@@ -3797,13 +3353,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 22.9
  },
@@ -3831,13 +3383,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 26.3
  },
@@ -3865,13 +3413,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 18.9
  },
@@ -3899,13 +3443,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 9.6
  },
@@ -3933,13 +3473,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 11.1
  },
@@ -3967,13 +3503,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 13.2
  },
@@ -4001,13 +3533,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 14.5
  },
@@ -4035,13 +3563,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 20.5
  },
@@ -4069,13 +3593,9 @@
    {
     "label": "wrist cam (ultrawide)",
     "fed": true
-   },
-   {
-    "label": "third-person cam (ultrawide)",
-    "fed": false
    }
   ],
-  "width": 960,
+  "width": 1440,
   "height": 752,
   "seconds": 36.7
  },

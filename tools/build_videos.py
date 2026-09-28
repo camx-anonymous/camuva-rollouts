@@ -10,8 +10,10 @@ Source layout (default root rollouts):
 Every camera on the rig is logged on one shared clock, and each mp4 has exactly one timestamp per
 frame, so the views can be resampled onto a common 30 fps time grid (nearest frame by timestamp).
 The grid is anchored to the third-person camera: its first stamp is t = 0 and its last stamp ends the
-clip. The third-person view is always the first tile; the tiles after it are the camera streams the
-policy actually received (as configured in episode_config.task), labelled POLICY INPUT.
+clip. The third-person view (main lens) is always the first tile; the tiles after it are the camera
+streams the policy actually received (as configured in episode_config.task), labelled POLICY INPUT.
+With one input the two tiles sit side by side; with two inputs the third-person view is shown large
+with the inputs stacked beside it; with three (bimanual) the four tiles form a 2x2 grid.
 
 Output:
   videos/<run-slug>__epNN.mp4   tiled H.264, 30 fps, no audio, faststart
@@ -77,8 +79,7 @@ CAM_LABELS = {
     ('realsense_d405_head', 'head'):      'head cam (D405)',
     ('realsense_d405_left', 'left'):      'left wrist cam (D405)',
     ('realsense_d405_right', 'right'):    'right wrist cam (D405)',
-    (THIRD, 'main'):                      'third-person cam',
-    (THIRD, 'ultrawide'):                 'third-person cam (ultrawide)',
+    (THIRD, 'main'):                      'third-person cam',   # the iPhone's ultrawide lens is recorded too but not shown
 }
 FPS = 30
 STALE_S = 0.25   # a shown frame older than this (camera dropped frames) is dimmed and flagged
@@ -148,20 +149,21 @@ class Layout:
     """Tile geometry plus the static overlay (header text, view pills, input borders)."""
     def __init__(self, views, tile_w, title, header_h=32):
         from PIL import Image, ImageDraw
-        self.tile_w, self.tile_h = tile_w, tile_w * 3 // 4
+        tw, th = tile_w, tile_w * 3 // 4
         n = len(views)
-        self.cols = 1 if n == 1 else 2
-        self.rows = (n + self.cols - 1) // self.cols
         self.header_h = header_h
-        self.W, self.H = self.cols * self.tile_w, header_h + self.rows * self.tile_h
-        if n == 1:                                   # single phone clip: 16:9 tile
-            self.tile_h = tile_w * 9 // 16
-            self.H = header_h + self.tile_h
         self.views = views
-        self.rects = []
-        for k in range(n):
-            r, c = divmod(k, self.cols)
-            self.rects.append((c * self.tile_w, header_h + r * self.tile_h))
+        # rects are (x, y, w, h); the first view (third-person camera) always comes first
+        if n == 1:                                   # single phone clip: one 16:9 tile
+            self.rects = [(0, header_h, tw, tw * 9 // 16)]
+        elif n == 2:                                 # third-person | one policy input
+            self.rects = [(0, header_h, tw, th), (tw, header_h, tw, th)]
+        elif n == 3:                                 # third-person large on the left, two policy inputs stacked
+            self.rects = [(0, header_h, 2 * tw, 2 * th), (2 * tw, header_h, tw, th), (2 * tw, header_h + th, tw, th)]
+        else:                                        # 2-column grid
+            self.rects = [((k % 2) * tw, header_h + (k // 2) * th, tw, th) for k in range(n)]
+        self.W = max(x + w for x, y, w, h in self.rects)
+        self.H = max(y + h for x, y, w, h in self.rects)
         img = Image.new('RGB', (self.W, self.H), (0, 0, 0))
         mask = Image.new('L', (self.W, self.H), 0)
         d, dm = ImageDraw.Draw(img), ImageDraw.Draw(mask)
@@ -171,7 +173,7 @@ class Layout:
         d.text((12, header_h // 2), title, font=font(15, bold=True), fill=(PAPER[2], PAPER[1], PAPER[0]), anchor='lm')
         # per-tile pill + border
         f = font(12, bold=True)
-        for (x, y), v in zip(self.rects, views):
+        for (x, y, w, h), v in zip(self.rects, views):
             txt = ('POLICY INPUT  ·  ' if v['fed'] else 'NOT A POLICY INPUT  ·  ') + v['label']
             col = GREEN if v['fed'] else GREY
             col = (col[2], col[1], col[0])
@@ -182,22 +184,25 @@ class Layout:
             d.text((box[0] + 9, y + 8 + 12), txt, font=f, fill=(255, 255, 255), anchor='lm')
             if v['fed']:
                 for i in range(3):
-                    d.rectangle([x + i, y + i, x + self.tile_w - 1 - i, y + self.tile_h - 1 - i], outline=col)
-                dm.rectangle([x, y, x + self.tile_w - 1, y + self.tile_h - 1], outline=255, width=3)
+                    d.rectangle([x + i, y + i, x + w - 1 - i, y + h - 1 - i], outline=col)
+                dm.rectangle([x, y, x + w - 1, y + h - 1], outline=255, width=3)
         self.overlay = np.asarray(img)[:, :, ::-1].copy()
         self.mask = np.asarray(mask) > 0
         self.time_font = mono(14)
         self.pill_font = f
         self.time_x = self.W - 12
 
-    def fit(self, frame):
-        """scale a BGR frame to fit the tile, letterboxed"""
+    def fit(self, frame, k):
+        """scale a BGR frame to fit tile k, letterboxed"""
         import cv2
+        _, _, tw, th = self.rects[k]
+        if frame is None:
+            return np.zeros((th, tw, 3), np.uint8)
         h, w = frame.shape[:2]
-        s = min(self.tile_w / w, self.tile_h / h)
+        s = min(tw / w, th / h)
         nw, nh = int(round(w * s)), int(round(h * s))
-        tile = np.empty((self.tile_h, self.tile_w, 3), np.uint8); tile[:] = LETTERBOX
-        ox, oy = (self.tile_w - nw) // 2, (self.tile_h - nh) // 2
+        tile = np.empty((th, tw, 3), np.uint8); tile[:] = LETTERBOX
+        ox, oy = (tw - nw) // 2, (th - nh) // 2
         tile[oy:oy + nh, ox:ox + nw] = cv2.resize(frame, (nw, nh), interpolation=cv2.INTER_AREA)
         return tile
 
@@ -205,10 +210,10 @@ class Layout:
         """stale: per-tile age in seconds of the frame shown when the camera had no frame near t (else None)"""
         from PIL import Image, ImageDraw
         canvas = np.zeros((self.H, self.W, 3), np.uint8)
-        for k, ((x, y), tile) in enumerate(zip(self.rects, tiles)):
+        for k, ((x, y, w, h), tile) in enumerate(zip(self.rects, tiles)):
             if stale and stale[k] is not None:
                 tile = (tile // 2).astype(np.uint8)          # dim the held frame so a stalled camera is obvious
-            canvas[y:y + self.tile_h, x:x + self.tile_w] = tile
+            canvas[y:y + h, x:x + w] = tile
         canvas[self.mask] = self.overlay[self.mask]
         strip = Image.fromarray(canvas[:self.header_h, self.W - 140:, ::-1].copy())
         ImageDraw.Draw(strip).text((140 - 12, self.header_h // 2), f't = {t:.1f} s', font=self.time_font,
@@ -217,7 +222,7 @@ class Layout:
         if stale and any(s is not None for s in stale):
             img = Image.fromarray(canvas[:, :, ::-1])
             d = ImageDraw.Draw(img)
-            for (x, y), s in zip(self.rects, stale):
+            for (x, y, w, h), s in zip(self.rects, stale):
                 if s is None: continue
                 txt = f'camera stalled · last frame {s:.1f} s old'
                 tw = d.textlength(txt, font=self.pill_font)
@@ -282,8 +287,7 @@ def render_episode(job):
             for j, dec in enumerate(decs):
                 i = int(idx[j][k])
                 if i != last[j]:
-                    fr = dec.get(i)
-                    tiles[j] = lay.fit(fr) if fr is not None else np.zeros((lay.tile_h, lay.tile_w, 3), np.uint8)
+                    tiles[j] = lay.fit(dec.get(i), j)
                     last[j] = i
             stale = [float(a[k]) if a[k] > STALE_S else None for a in age]
             frame = lay.compose(tiles, grid[k] - t0, stale)
@@ -312,7 +316,7 @@ def render_phone(job):
         for f in c.decode(s):
             t = float(f.time or 0.0)
             t_start = t if t_start is None else t_start
-            frame = lay.compose([lay.fit(f.to_ndarray(format='bgr24'))], t - t_start)
+            frame = lay.compose([lay.fit(f.to_ndarray(format='bgr24'), 0)], t - t_start)
             if n == poster_k:
                 save_poster(frame, job['jpg'], job['poster_w'])
             enc.stdin.write(frame.tobytes()); n += 1
@@ -383,9 +387,6 @@ def main():
                     warnings.append(f'{ep}: no label for camera {(cam, key)}')
             views = [{'cam': THIRD, 'key': 'main', 'label': CAM_LABELS[(THIRD, 'main')], 'fed': False}]
             views += [{'cam': c, 'key': k, 'label': CAM_LABELS.get((c, k), f'{c}/{k}'), 'fed': True} for c, k in fed]
-            if len(views) == 3 and (ep / f'{THIRD}.zarr' / 'ultrawide.mp4').exists():
-                # fill the 2x2 grid with the wider third-person view (also not a policy input)
-                views.append({'cam': THIRD, 'key': 'ultrawide', 'label': CAM_LABELS[(THIRD, 'ultrawide')], 'fed': False})
             base = f'{slug(run)}__ep{n:02d}'
             srcs = [ep / f"{v['cam']}.zarr" / f"{v['key']}.mp4" for v in views] + [Path(__file__)]
             job = {'ep': str(ep), 'views': views, 'title': f'{rig}  ·  {task}  ·  episode {n:02d}',
