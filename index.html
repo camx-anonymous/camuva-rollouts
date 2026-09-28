@@ -20,24 +20,27 @@
 .facets{display:flex;flex-direction:column;gap:4px;margin:10px 0 12px}
 .facets .toolbar{margin:0}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink2);font-size:13px;margin:0 0 14px}
+.topbar nav a.soon{color:var(--ink3);cursor:default}
 .empty{grid-column:1/-1;color:var(--ink3);padding:30px;text-align:center;border:1px dashed var(--line);border-radius:8px;background:var(--chipbg)}
 </style>
 </head>
 <body>
-<nav class="site-switch" aria-label="Switch site"><span class="lbl">Sites</span>
-  <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
-  <a href="https://camx-anonymous.github.io/camuva-rollouts/" aria-current="page">CAMUVA Rollouts</a>
-</nav>
-<header><div class="wrap">
-  <h1>CAMUVA Rollouts <small>policy rollout videos</small></h1>
-  <nav class="links">
-    <a href="#">Paper (coming soon)</a>
-    <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
-    <a href="https://github.com/camx-anonymous/camuva-rollouts">Code</a>
-  </nav>
-</div></header>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./"><span class="mark"></span><span class="name">CAMUVA</span></a>
+    <nav aria-label="Sections">
+      <a href="#rollouts" aria-current="page">Rollouts</a>
+      <a href="#" class="soon">Paper (coming soon)</a>
+      <a href="https://github.com/camx-anonymous/camuva-rollouts">Code</a>
+    </nav>
+    <a class="button primary cta" href="https://camx-anonymous.github.io/">CAMX Dataset</a>
+  </div>
+</header>
 
-<main class="wrap">
+<main class="wrap" id="rollouts">
+  <header>
+    <h1>CAMUVA Rollouts <small>policy rollout videos</small></h1>
+  </header>
   <div class="facets" id="facets"></div>
   <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span></div>
   <div class="grid" id="grid"><p class="empty">Loading…</p></div>
