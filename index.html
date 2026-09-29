@@ -88,8 +88,10 @@
 footer{margin:0}
 .foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .foot nav{display:flex;gap:20px;flex-wrap:wrap}
-.foot nav a{color:var(--ink3);text-decoration:none}
-.foot nav a:hover{color:var(--accent)}
+.foot nav a,.foot nav button{color:var(--ink3);text-decoration:none;font:inherit;padding:0;border:0;background:none}
+.foot nav a:hover,.foot nav button:hover{color:var(--accent)}
+.cite{display:none;margin-top:20px;max-width:560px}
+.cite.show{display:block}
 </style>
 </head>
 <body>
@@ -138,9 +140,15 @@ footer{margin:0}
       <span id="footInfo">CamUVA Rollouts · anonymized for review</span>
       <nav>
         <a href="https://github.com/camx-anonymous/camuva-rollouts">GitHub</a>
-        <a href="https://camx-anonymous.github.io/">CAMX Dataset</a>
+        <button type="button" id="citeBtn">Cite</button>
       </nav>
     </div>
+    <div class="wrap"><pre class="cite" id="cite">@misc{camx2026,
+  title  = {CAMX: A Camera-Aware Cross-Embodiment Dataset},
+  author = {Anonymous Authors},
+  year   = {2026},
+  note   = {Under review}
+}</pre></div>
   </footer>
 </main>
 <script>
@@ -267,6 +275,7 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
   };
   // pause every other clip when one starts, so the page never plays many videos at once
   groups.addEventListener('play',e=>{groups.querySelectorAll('video').forEach(v=>{if(v!==e.target)v.pause();});},true);
+  $('citeBtn').onclick=()=>$('cite').classList.toggle('show');
   render();
   // deep links: #emb-<rig> or #task-<rig>-<task> scroll to the section once it exists
   if(location.hash){const el=document.querySelector(location.hash.replace(/[^#\w-]/g,''));if(el)el.scrollIntoView();}
