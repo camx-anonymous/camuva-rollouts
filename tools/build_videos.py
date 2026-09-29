@@ -5,7 +5,16 @@ Source layout (default root rollouts):
   <run>/episode_NNNNNN/<camera>.zarr/<view>.mp4              H.264 camera recording
   <run>/episode_NNNNNN/<camera>.zarr/<view>_timestamps       zarr float64 array, one wall-clock stamp per frame
   <run>/episode_NNNNNN/metadata.zarr/.zattrs                 is_successful, episode_config (which cameras feed the policy)
-  box_task/IMG_*.MOV                                         handheld phone recordings, single view, no metadata
+
+RB-Y1 humanoid episodes (rby1_cam_uva.tar.gz unpacked under <root>/rby1_cam_uva):
+  rby1_cam_uva/<task>/<run>/episode_NNNNNN/blackfly_<cam>.zarr/<cam>.mp4   Blackfly policy cameras, monotonic stamps
+  box_task/IMG_*.MOV                                         third-person phone clips recorded on a separate device
+The phone was not logged by the robot, so each episode is paired with the clip whose QuickTime creation date
+(= recording start) overlaps the episode's wall-clock span (the episode folder's mtime is its start, the mp4
+mtimes its end). That pairing is only second-accurate, so the offset is then refined by cross-correlating
+the phone's frame-difference energy with the robot cameras' (both spike when the robot moves), see rby1_sync.
+The clip then spans only the time the phone and the robot cameras both cover, so every tile is in sync throughout.
+Bystanders' faces are blurred in the RB-Y1 head-camera tile, and in the other tiles only inside hand-checked windows (RBY1_BLUR_WINDOWS); episodes with no phone clip are not published.
 
 Every camera on the rig is logged on one shared clock, and each mp4 has exactly one timestamp per
 frame, so the views can be resampled onto a common 30 fps time grid (nearest frame by timestamp).
@@ -13,7 +22,8 @@ The grid is anchored to the third-person camera: its first stamp is t = 0 and it
 clip. The third-person view (main lens) is always the first tile; the tiles after it are the camera
 streams the policy actually received (as configured in episode_config.task), labelled POLICY INPUT.
 With one input the two tiles sit side by side; with two inputs the third-person view is shown large
-with the inputs stacked beside it; with three (bimanual) the four tiles form a 2x2 grid.
+with the inputs stacked beside it; with three (bimanual) the four tiles form a 2x2 grid. For the RB-Y1 the
+16:9 phone view spans the top and the three policy cameras sit in a row under it.
 
 Output:
   videos/<run-slug>__epNN.mp4   tiled H.264, 30 fps, no audio, faststart
@@ -24,6 +34,7 @@ Needs ffmpeg on PATH and the Python packages zarr, numpy, av, opencv-python-head
 Re-runs are incremental: a clip is skipped when its output is newer than every source it was built from.
 """
 import argparse, glob, json, os, re, subprocess, sys, time
+from datetime import datetime
 from multiprocessing import Pool
 from pathlib import Path
 
@@ -55,8 +66,8 @@ RUNS = {
     'UMI_water-pour':                      ('UMI',                   'water pour',      'CAMUVA',           'ARX5'),
     'UMI_uva-cup-arrangement':             ('UMI',                   'cup arrangement', 'CAMUVA',           'ARX5'),
     'UMI_uva-towel':                       ('UMI',                   'towel fold',      'CAMUVA',           'ARX5'),
-    'YAM_plates-on-rack':                  ('YAM bimanual',          'plates in rack',  'CAMUVA',           'YAM (bimanual)'),
-    'YAM_plates-in-rack_abc-vla-baseline': ('YAM bimanual',          'plates in rack',  'ABC VLA baseline', 'YAM (bimanual)'),
+    'YAM_plates-on-rack':                  ('YAM bimanual',          'dish in rack',  'CAMUVA',           'YAM (bimanual)'),
+    'YAM_plates-in-rack_abc-vla-baseline': ('YAM bimanual',          'dish in rack',  'ABC VLA baseline', 'YAM (bimanual)'),
 }
 # byte-identical copies of another run; skipped so the same episode is not shown twice
 DUPLICATES = {'UMI_cup': 'UMI_uva-cup-arrangement'}
@@ -64,7 +75,38 @@ DUPLICATES = {'UMI_cup': 'UMI_uva-cup-arrangement'}
 CAPTION_MISMATCH = {'iPhUMI_banana-in-box'}
 # (run, episode) pairs left out of the gallery on purpose
 EXCLUDE = {('UMI_uva-towel', 20), ('UMI_uva-towel', 21), ('YAM_plates-on-rack', 10)}
-PHONE_RUN = ('box_task', 'Humanoid (phone video)', 'box task', 'CAMUVA', 'humanoid')
+
+# RB-Y1 humanoid: <root>/rby1_cam_uva/<task>/<run>/episode_*; task directory -> (rig, task, policy, robot)
+RBY1_TASKS = {'box_placing_together': ('RB-Y1 humanoid', 'box on shelf', 'CAMUVA', 'Rainbow RB-Y1 (wheeled bimanual)')}
+# cameras the RB-Y1 policy consumed, in tile order. blackfly_head_right is logged as well but was not a policy input.
+RBY1_FED = [('blackfly_head_left', 'head_left'), ('blackfly_left_wrist', 'left_wrist'), ('blackfly_right_wrist', 'right_wrist')]
+# episodes shown per task (None = all): ten of the 22 evaluation episodes at the evaluation's 30% success rate, all
+# covered by a phone clip (episodes 0-9 ran before the phone session and are never shown), preferring those whose
+# head camera sees the least of the phone operator; faces are blurred either way.
+RBY1_SHOW = {'box_placing_together': set(range(10, 20))}   # 3 successes (12, 13, 17) + 7 failures
+# metadata is_successful is wrong for these episodes (checked against the video): 20 ends with the box wedged tilted on the top
+# shelf still in the grippers, 21 with the box dropped on the floor. Neither is shown; this keeps a stray render honest.
+RBY1_OUTCOME = {('box_placing_together', 20): False, ('box_placing_together', 21): False}
+PHONE_DIR = 'box_task'                                     # under <root>: the third-person phone clips
+# Faces of bystanders (the phone operator stands inside the head camera's view) are blurred in the RB-Y1 robot-camera tiles:
+# YuNet detections on every source frame, each box widened and held for BLUR_HOLD_S before and after it was seen.
+FACE_MODEL = str(Path(__file__).resolve().parent / 'models' / 'face_detection_yunet_2023mar.onnx')
+BLUR_HOLD_S, BLUR_PAD = 1.0, 0.5
+# One bystander at most is in view, standing to the left of the robot, so at most one face per frame is blurred: the
+# best detection inside FACE_REGION (upper-left of the head camera, as fractions of width / height), kept when it is
+# confident (>= FACE_STRONG) or when a weaker one (>= FACE_WEAK) lies on the same track as a confident detection
+# within FACE_LINK_S (the face is partly hidden behind the phone for long stretches). Grippers, lenses and cardboard
+# edges sit outside the region or below FACE_STRONG and never form such a track.
+FACE_STRONG, FACE_WEAK, FACE_LINK_S = 0.8, 0.5, 2.0
+FACE_WINDOW_SCORE = 0.3                                    # inside a hand-checked window even faint candidates are blurred
+FACE_REGION = (0.0, 0.0, 0.5, 0.65)
+# The head camera is blurred wherever the tracked face is. The wrist cameras mostly see cardboard, which the detector
+# mistakes for faces, and the phone rarely sees anyone, so those views are blurred only inside these hand-checked
+# windows: (episode, view) -> [(start s, end s)] in clip time; a view not listed here is never blurred.
+RBY1_BLUR_WINDOWS = {(13, 'phone'): [(36, 40)],
+                     (16, 'left_wrist'): [(68, 82)], (18, 'right_wrist'): [(11, 20), (48, 57)]}
+# where in the frame the person is during those windows (fractions of width / height), so nothing else is blurred
+RBY1_BLUR_REGION = {(13, 'phone'): (0.72, 0.2, 1.0, 1.0)}
 
 THIRD = 'third_person_camera_0'
 # camera zarr -> (short label). The wrist / head cameras below are the ones the policies consume;
@@ -80,7 +122,11 @@ CAM_LABELS = {
     ('realsense_d405_left', 'left'):      'left wrist cam (D405)',
     ('realsense_d405_right', 'right'):    'right wrist cam (D405)',
     (THIRD, 'main'):                      'third-person cam',   # the iPhone's ultrawide lens is recorded too but not shown
+    ('blackfly_head_left', 'head_left'):    'head cam',
+    ('blackfly_left_wrist', 'left_wrist'):  'left wrist cam',
+    ('blackfly_right_wrist', 'right_wrist'):'right wrist cam',
 }
+PHONE_LABEL = "third-person phone"
 FPS = 30
 STALE_S = 0.25   # a shown frame older than this (camera dropped frames) is dimmed and flagged
 
@@ -147,14 +193,20 @@ LETTERBOX = (16, 16, 16)
 
 class Layout:
     """Tile geometry plus the static overlay (header text, view pills, input borders)."""
-    def __init__(self, views, tile_w, title, header_h=32):
+    def __init__(self, views, tile_w, title, header_h=32, mode=None):
         from PIL import Image, ImageDraw
         tw, th = tile_w, tile_w * 3 // 4
         n = len(views)
         self.header_h = header_h
         self.views = views
+        even = lambda x: int(round(x / 2)) * 2       # yuv420p needs even sizes
         # rects are (x, y, w, h); the first view (third-person camera) always comes first
-        if n == 1:                                   # single phone clip: one 16:9 tile
+        if mode == 'phone_top':                      # 16:9 phone view across the top, the policy inputs in a row below it
+            wide_w = (n - 1) * tw
+            wide_h = even(wide_w * views[0].get('aspect', 9 / 16))
+            th_in = even(tw * views[1].get('aspect', 0.75))
+            self.rects = [(0, header_h, wide_w, wide_h)] + [(k * tw, header_h + wide_h, tw, th_in) for k in range(n - 1)]
+        elif n == 1:                                 # single phone clip: one 16:9 tile
             self.rects = [(0, header_h, tw, tw * 9 // 16)]
         elif n == 2:                                 # third-person | one policy input
             self.rects = [(0, header_h, tw, th), (tw, header_h, tw, th)]
@@ -222,9 +274,9 @@ class Layout:
         if stale and any(s is not None for s in stale):
             img = Image.fromarray(canvas[:, :, ::-1])
             d = ImageDraw.Draw(img)
-            for (x, y, w, h), s in zip(self.rects, stale):
+            for (x, y, w, h), s, v in zip(self.rects, stale, self.views):
                 if s is None: continue
-                txt = f'camera stalled · last frame {s:.1f} s old'
+                txt = v.get('stale_text') or f'camera stalled · last frame {s:.1f} s old'
                 tw = d.textlength(txt, font=self.pill_font)
                 box = [x + 8, y + 40, x + 8 + tw + 18, y + 64]
                 d.rounded_rectangle(box, radius=6, fill=(192, 57, 43))
@@ -232,13 +284,22 @@ class Layout:
             canvas = np.asarray(img)[:, :, ::-1].copy()
         return canvas
 
+def decode_frames(container, stream):
+    """frames of a video stream, skipping packets the decoder rejects (a repaired mp4 with a zero-filled hole)"""
+    import av
+    for pkt in container.demux(stream):
+        try:
+            yield from pkt.decode()
+        except av.error.InvalidDataError:
+            continue
+
 class Decoder:
     """sequential frame access to one mp4; frames are requested in non-decreasing order"""
     def __init__(self, path):
         import av
         self.c = av.open(str(path))
         s = self.c.streams.video[0]; s.thread_type = 'AUTO'
-        self.gen = self.c.decode(s)
+        self.gen = decode_frames(self.c, s)
         self.idx, self.frame = -1, None
     def get(self, i):
         while self.idx < i:
@@ -264,21 +325,108 @@ def save_poster(frame, path, width):
     small = cv2.resize(frame, (width, int(round(h * width / w))), interpolation=cv2.INTER_AREA)
     cv2.imwrite(str(path), small, [cv2.IMWRITE_JPEG_QUALITY, 78])
 
+# ---------- face blurring ----------
+def face_boxes(path, region=None, score=None):
+    """{frame index: (x, y, w, h, score)}: the best face candidate YuNet finds in each frame (score >= FACE_WEAK),
+    restricted to candidates whose centre lies in region (x0, y0, x1, y1 as fractions) when one is given"""
+    import av, cv2
+    det, out = None, {}
+    c = av.open(str(path)); s = c.streams.video[0]; s.thread_type = 'AUTO'
+    for i, f in enumerate(decode_frames(c, s)):
+        img = f.to_ndarray(format='bgr24')
+        H, W = img.shape[:2]
+        if det is None:
+            det = cv2.FaceDetectorYN.create(FACE_MODEL, '', (W, H), score_threshold=score or FACE_WEAK, nms_threshold=0.3, top_k=50)
+        _, faces = det.detect(img)
+        if faces is None:
+            continue
+        if region:
+            x0, y0, x1, y1 = region
+            faces = [r for r in faces if x0 * W <= r[0] + r[2] / 2 <= x1 * W and y0 * H <= r[1] + r[3] / 2 <= y1 * H]
+        if len(faces):
+            x, y, w, h, *rest = max(faces, key=lambda r: r[-1])
+            out[i] = (int(x), int(y), int(w), int(h), float(rest[-1]))
+    c.close()
+    return out
+
+def face_track(cands, fps):
+    """{frame index: [(x, y, w, h)]}: confident candidates plus weaker ones linked to them (see FACE_STRONG)"""
+    link = int(round(FACE_LINK_S * fps))
+    near = lambda a, b: abs(a[0] + a[2] / 2 - b[0] - b[2] / 2) < 1.5 * max(a[2], b[2]) and abs(a[1] + a[3] / 2 - b[1] - b[3] / 2) < 1.5 * max(a[3], b[3])
+    acc = {i: c for i, c in cands.items() if c[4] >= FACE_STRONG}
+    grew = True
+    while grew:                                          # weak detections join the track outward from confident ones
+        grew = False
+        for i, c in cands.items():
+            if i in acc:
+                continue
+            if any(k in acc and near(c, acc[k]) for k in range(i - link, i + link + 1)):
+                acc[i] = c; grew = True
+    return {i: [c[:4]] for i, c in acc.items()}
+
+def blur_plan(boxes, n_frames, fps):
+    """per frame, the boxes to blur: every detection widened by BLUR_PAD and held BLUR_HOLD_S either side, so a
+    face the detector misses for a few frames (turned away, motion blur) stays covered"""
+    hold = int(round(BLUR_HOLD_S * fps))
+    plan = [[] for _ in range(n_frames)]
+    for i, bs in boxes.items():
+        for x, y, w, h in bs:
+            px, py = int(w * BLUR_PAD), int(h * BLUR_PAD)
+            box = (x - px, y - py, w + 2 * px, h + 2 * py)
+            for k in range(max(0, i - hold), min(n_frames, i + hold + 1)):
+                plan[k].append(box)
+    return plan
+
+def blur_boxes(frame, boxes):
+    import cv2
+    H, W = frame.shape[:2]
+    for x, y, w, h in boxes:
+        x0, y0, x1, y1 = max(0, x), max(0, y), min(W, x + w), min(H, y + h)
+        if x1 <= x0 or y1 <= y0: continue
+        k = max(15, (min(x1 - x0, y1 - y0) // 4) * 2 + 1)
+        frame[y0:y1, x0:x1] = cv2.GaussianBlur(frame[y0:y1, x0:x1], (k, k), 0)
+    return frame
+
 # ---------- one episode ----------
 def render_episode(job):
-    """job: dict(ep, views=[{cam,key,label,fed}], title, mp4, jpg, tile, crf, threads)"""
+    """job: dict(ep, views=[{cam,key,label,fed}], title, mp4, jpg, tile, crf, threads[, phone, layout])
+    A view is normally a camera zarr (cam, key); with job['phone'] the first view is the RB-Y1 phone clip,
+    whose frame times are put on the robot clock by rby1_sync."""
     ep = Path(job['ep'])
     views = job['views']
-    ts = [load_ts(ep, v['cam'], v['key']) for v in views]
-    ref = ts[0]                                              # third-person camera anchors the clock
-    t0, t1 = ref[0], ref[-1]
+    note = ''
+    ts = [load_ts(ep, v['cam'], v['key']) if v.get('cam') else None for v in views]
+    if job.get('phone'):
+        ts[0], note = rby1_sync(job['phone'], [(ep / f"{v['cam']}.zarr" / f"{v['key']}.mp4", t) for v, t in zip(views[1:], ts[1:])])
+    if job.get('layout') == 'phone_top':                   # the clip covers only the time the phone clip and the policy cameras share
+        fed_ts = [t for v, t in zip(views, ts) if v['fed']]
+        t0, t1 = max(ts[0][0], min(t[0] for t in fed_ts)), min(ts[0][-1], max(t[-1] for t in fed_ts))
+        note += f' span {t1 - t0:.1f}s'
+    else:
+        ref = ts[0]                                          # third-person camera anchors the clock
+        t0, t1 = ref[0], ref[-1]
     n = int(np.floor((t1 - t0) * FPS)) + 1
     grid = t0 + np.arange(n) / FPS
     idx = [nearest(t, grid) for t in ts]
     # a camera that dropped frames has no stamp near the grid time; the held frame is then flagged as stale
     age = [np.abs(t[i] - grid) for t, i in zip(ts, idx)]
-    lay = Layout(views, job['tile'], job['title'])
-    decs = [Decoder(ep / f"{v['cam']}.zarr" / f"{v['key']}.mp4") for v in views]
+    lay = Layout(views, job['tile'], job['title'], mode=job.get('layout'))
+    paths = [v['src'] if v.get('src') else ep / f"{v['cam']}.zarr" / f"{v['key']}.mp4" for v in views]
+    plans = [None] * len(views)
+    if job.get('blur'):
+        for j, (p, t) in enumerate(zip(paths, ts)):
+            rng = views[j].get('blur_ranges')                # None: whole clip; []: never (phone view, unlisted wrist cams)
+            if rng is not None and not rng:
+                continue
+            fps = len(t) / max(1e-6, t[-1] - t[0])
+            if rng:                                          # hand-checked window: every candidate inside it counts
+                cands = face_boxes(p, region=views[j].get('blur_region'), score=FACE_WINDOW_SCORE)
+                boxes = {i: [c[:4]] for i, c in cands.items() if i < len(t) and any(lo <= t[i] - t0 <= hi for lo, hi in rng)}
+            else:                                            # head camera: one tracked face in the upper-left region
+                boxes = face_track(face_boxes(p, FACE_REGION), fps)
+            plans[j] = blur_plan(boxes, len(t), fps)
+            note += f' blur[{views[j]["label"]}]={len(boxes)}f'
+    decs = [Decoder(p) for p in paths]
     enc = encoder(job['mp4'] + '.part', lay.W, lay.H, job['crf'], job['threads'])
     tiles, last = [None] * len(views), [-1] * len(views)
     poster_k = min(n - 1, max(0, n // 5))
@@ -287,7 +435,10 @@ def render_episode(job):
             for j, dec in enumerate(decs):
                 i = int(idx[j][k])
                 if i != last[j]:
-                    tiles[j] = lay.fit(dec.get(i), j)
+                    src = dec.get(i)
+                    if plans[j] and src is not None and i < len(plans[j]) and plans[j][i]:
+                        src = blur_boxes(src.copy(), plans[j][i])
+                    tiles[j] = lay.fit(src, j)
                     last[j] = i
             stale = [float(a[k]) if a[k] > STALE_S else None for a in age]
             frame = lay.compose(tiles, grid[k] - t0, stale)
@@ -300,49 +451,108 @@ def render_episode(job):
     if rc != 0:
         raise RuntimeError(f'ffmpeg failed on {job["mp4"]}')
     os.replace(job['mp4'] + '.part', job['mp4'])
-    return job['mp4'], n / FPS, lay.W, lay.H
+    return job['mp4'], n / FPS, lay.W, lay.H, note
 
-def render_phone(job):
-    """single handheld clip: header + one tile, frames passed through at their own rate (~30 fps)"""
+# ---------- RB-Y1: pairing and syncing the separately recorded phone clip ----------
+def phone_clips(pdir):
+    """[(start epoch s, duration s, path)] for every clip in pdir; the QuickTime creation date is the recording start"""
+    out = []
+    for p in sorted(Path(pdir).glob('*.MOV')) + sorted(Path(pdir).glob('*.mp4')):
+        r = subprocess.run(['ffprobe', '-v', 'error', '-show_entries', 'format=duration:format_tags=com.apple.quicktime.creationdate,creation_time',
+                            '-of', 'json', str(p)], capture_output=True, text=True)
+        f = json.loads(r.stdout)['format']; tags = f.get('tags', {})
+        stamp = tags.get('com.apple.quicktime.creationdate') or tags.get('creation_time')
+        if not stamp:
+            continue
+        out.append((datetime.fromisoformat(stamp.replace('Z', '+00:00')).timestamp(), float(f['duration']), p))
+    return out
+
+def episode_wall_span(ep, fed):
+    """(start, end) epoch seconds of an RB-Y1 episode from file times: the recorder creates the camera folders when
+    the episode starts (folder mtime) and finalises the mp4s when it ends (mp4 mtime). tar/rsync -a keep these."""
+    start = ep.stat().st_mtime
+    end = max((ep / f'{c}.zarr' / f'{k}.mp4').stat().st_mtime for c, k in fed)
+    return start, end
+
+def match_phone(span, clips):
+    """the clip overlapping the episode's wall-clock span the most, or None; (clip, overlap fraction of the episode)"""
+    s, e = span
+    best, cover = None, 0.0
+    for cs, cd, p in clips:
+        ov = max(0.0, min(e, cs + cd) - max(s, cs)) / max(1e-6, e - s)
+        if ov > cover:
+            best, cover = (cs, cd, p), ov
+    return best, cover
+
+def motion_series(path, size=(160, 100)):
+    """(frame times, frame-difference energy) of a video at low resolution; energy[0] = 0"""
     import av
-    src = Path(job['src'])
-    views = job['views']
-    lay = Layout(views, job['tile'], job['title'])
-    c = av.open(str(src)); s = c.streams.video[0]; s.thread_type = 'AUTO'
-    enc = encoder(job['mp4'] + '.part', lay.W, lay.H, job['crf'], job['threads'])
-    n, t_start, total = 0, None, s.frames or 1
-    poster_k = max(0, total // 5)
-    try:
-        for f in c.decode(s):
-            t = float(f.time or 0.0)
-            t_start = t if t_start is None else t_start
-            frame = lay.compose([lay.fit(f.to_ndarray(format='bgr24'), 0)], t - t_start)
-            if n == poster_k:
-                save_poster(frame, job['jpg'], job['poster_w'])
-            enc.stdin.write(frame.tobytes()); n += 1
-    finally:
-        enc.stdin.close(); rc = enc.wait(); c.close()
-    if rc != 0:
-        raise RuntimeError(f'ffmpeg failed on {job["mp4"]}')
-    os.replace(job['mp4'] + '.part', job['mp4'])
-    return job['mp4'], n / FPS, lay.W, lay.H
+    c = av.open(str(path)); s = c.streams.video[0]; s.thread_type = 'AUTO'
+    times, en, prev = [], [], None
+    for f in decode_frames(c, s):
+        g = f.reformat(width=size[0], height=size[1], format='gray').to_ndarray().astype(np.float32)
+        times.append(float(f.time if f.time is not None else len(times) / 30))
+        en.append(0.0 if prev is None else float(np.abs(g - prev).mean()))
+        prev = g
+    c.close()
+    return np.asarray(times), np.asarray(en)
+
+def best_lag(t_a, e_a, t_b, e_b, lag0, window=4.0, step=0.05):
+    """lag such that b's clock = a's clock + lag, maximising the normalised cross-correlation of the two energy
+    traces within lag0 +- window; returns (correlation, lag)"""
+    grid = np.arange(t_a[0], t_a[-1], 0.1)
+    ea = np.interp(grid, t_a, e_a); ea = (ea - ea.mean()) / (ea.std() + 1e-9)
+    best = (-2.0, lag0)
+    for lag in np.arange(lag0 - window, lag0 + window + 1e-9, step):
+        eb = np.interp(grid + lag, t_b, e_b, left=np.nan, right=np.nan)
+        ok = ~np.isnan(eb)
+        if ok.sum() < 50:
+            continue
+        x, y = ea[ok], eb[ok]; y = (y - y.mean()) / (y.std() + 1e-9)
+        r = float((x * y).mean())
+        if r > best[0]:
+            best = (r, float(lag))
+    return best
+
+def rby1_sync(phone, cams):
+    """phone: dict(src, lag0) where lag0 = phone time - robot time from the wall clock (second-accurate);
+    cams: [(mp4 path, robot-clock stamps)] of the policy cameras. Returns the phone frame times on the robot
+    clock plus a log note. The refinement cross-correlates frame-difference energy: the phone sees the robot move
+    and the head / wrist cameras see the scene move at the same moments."""
+    smooth = lambda e: np.convolve(np.log1p(e), np.ones(3) / 3, mode='same')
+    tp, ep_ = motion_series(phone['src'])
+    tr, er = [], []
+    for path, ts in cams:
+        _, e = motion_series(path)
+        m = min(len(e), len(ts))
+        tr.append(ts[:m]); er.append(smooth(e[:m]))
+    grid = np.arange(min(t[0] for t in tr), max(t[-1] for t in tr), 0.1)
+    er_sum = sum(np.interp(grid, t, e) for t, e in zip(tr, er))
+    r, lag = best_lag(grid, er_sum, tp, smooth(ep_), phone['lag0'])
+    note = f'phone {Path(phone["src"]).name} lag {lag:+.2f}s (clock {phone["lag0"]:+.2f}s) r={r:.2f}'
+    return tp - lag, note
 
 def run_job(job):
     t = time.time()
     try:
-        out = render_phone(job) if job.get('src') else render_episode(job)
+        out = render_episode(job)
     except Exception as e:                                   # keep the pool going; report at the end
         return job['mp4'], None, None, None, f'{type(e).__name__}: {e}'
-    print(f'ok {Path(out[0]).name} {out[1]:.0f}s {time.time() - t:.0f}s', flush=True)
-    return (*out, None)
+    print(f'ok {Path(out[0]).name} {out[1]:.0f}s {time.time() - t:.0f}s {out[4]}', flush=True)
+    return (*out[:4], None)
 
+REUSE = False   # --reuse: an existing clip is never stale
 def stale(dst, srcs):
     dst = Path(dst)
-    return not dst.exists() or dst.stat().st_size == 0 or any(dst.stat().st_mtime < Path(s).stat().st_mtime for s in srcs)
+    if not dst.exists() or dst.stat().st_size == 0:
+        return True
+    return not REUSE and any(dst.stat().st_mtime < Path(s).stat().st_mtime for s in srcs)
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--root', default='rollouts')
+    ap.add_argument('--rby1-root', help='unpacked rby1_cam_uva.tar.gz (default <root>/rby1_cam_uva)')
+    ap.add_argument('--phone-dir', help='third-person phone clips for the RB-Y1 episodes (default <root>/box_task)')
     ap.add_argument('--site', default=str(Path(__file__).resolve().parent.parent), help='repo root (videos/, posters/, videos.json)')
     ap.add_argument('--tile', type=int, default=480, help='tile width in px (tiles are 4:3)')
     ap.add_argument('--poster-width', type=int, default=640)
@@ -352,15 +562,20 @@ def main():
     ap.add_argument('--only', help='regex on the run directory name; render just those runs')
     ap.add_argument('--episodes', help='comma-separated episode numbers to render (default all)')
     ap.add_argument('--force', action='store_true', help='re-render even if outputs are up to date')
+    ap.add_argument('--reuse', action='store_true', help='keep every existing clip (only render missing ones and rebuild videos.json)')
     ap.add_argument('--dry-run', action='store_true')
     a = ap.parse_args()
+    global REUSE
+    REUSE = a.reuse
     root, site = Path(a.root), Path(a.site)
     vdir, pdir = site / 'videos', site / 'posters'
     vdir.mkdir(exist_ok=True); pdir.mkdir(exist_ok=True)
     want_eps = {int(x) for x in a.episodes.split(',')} if a.episodes else None
 
     jobs, entries, warnings = [], [], []
-    unknown = sorted(d.name for d in root.iterdir() if d.is_dir() and d.name not in RUNS and d.name not in DUPLICATES and d.name != PHONE_RUN[0])
+    rby1_root, phone_dir = Path(a.rby1_root or root / 'rby1_cam_uva'), Path(a.phone_dir or root / PHONE_DIR)
+    unknown = sorted(d.name for d in root.iterdir() if d.is_dir() and d.name not in RUNS and d.name not in DUPLICATES
+                     and d.name not in (phone_dir.name, rby1_root.name))
     if unknown:
         warnings.append('unmapped run directories (skipped): ' + ', '.join(unknown))
 
@@ -404,26 +619,57 @@ def main():
                 'views': [{'label': v['label'], 'fed': v['fed']} for v in views],
             })
 
-    pd = root / PHONE_RUN[0]
-    if pd.is_dir() and not (a.only and not re.search(a.only, PHONE_RUN[0])):
-        _, rig, task, policy, robot = PHONE_RUN
-        for i, src in enumerate(sorted(pd.glob('*.MOV')) + sorted(pd.glob('*.mp4'))):
-            if want_eps is not None and i not in want_eps:
+    # RB-Y1 humanoid: policy cameras from the episode, third-person view from the separately recorded phone clip
+    clips = phone_clips(phone_dir) if phone_dir.is_dir() else []
+    for tdir in sorted(d for d in rby1_root.iterdir() if d.is_dir()) if rby1_root.is_dir() else []:
+        if tdir.name not in RBY1_TASKS:
+            warnings.append(f'unmapped RB-Y1 task directory (skipped): {tdir.name}'); continue
+        if a.only and not re.search(a.only, tdir.name):
+            continue
+        rig, task, policy, robot = RBY1_TASKS[tdir.name]
+        show = RBY1_SHOW.get(tdir.name)
+        for ep in sorted(tdir.glob('*/episode_*')):
+            n = int(ep.name.split('_')[-1])
+            if want_eps is not None and n not in want_eps:
                 continue
-            base = f'{slug(PHONE_RUN[0])}__{slug(src.stem)}'
-            views = [{'cam': None, 'key': None, 'label': 'handheld phone', 'fed': False}]
-            job = {'src': str(src), 'views': views, 'title': f'{rig}  ·  {task}  ·  clip {i + 1:02d}',
+            if show is not None and n not in show:
+                continue
+            meta = read_meta(ep)
+            fed = [(c, k) for c, k in RBY1_FED if (ep / f'{c}.zarr' / f'{k}.mp4').exists()]
+            if len(fed) < len(RBY1_FED):
+                warnings.append(f'{ep}: policy cameras {RBY1_FED} not all recorded (have {fed}), skipped'); continue
+            span = episode_wall_span(ep, fed)
+            clip, cover = match_phone(span, clips)
+            if not clip or cover < 0.5:                      # no third-person view: not published
+                warnings.append(f'{ep}: no phone clip covers it (best overlap {cover:.0%}), skipped'); continue
+            cs, cd, src = clip
+            w, h = map(int, subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 'stream=width,height',
+                                            '-of', 'csv=p=0', str(ep / f'{fed[0][0]}.zarr' / f'{fed[0][1]}.mp4')],
+                                           capture_output=True, text=True).stdout.strip().split(','))
+            t0 = min(load_ts(ep, c, k)[0] for c, k in fed)
+            # phone time - robot time, from the wall clock: the robot's first frame is at the folder's mtime
+            phone = {'src': str(src), 'lag0': (span[0] - cs) - float(t0)}
+            views = [{'src': str(src), 'label': PHONE_LABEL, 'fed': False, 'aspect': 9 / 16, 'stale_text': 'outside the phone recording',
+                      'blur_ranges': RBY1_BLUR_WINDOWS.get((n, 'phone'), []), 'blur_region': RBY1_BLUR_REGION.get((n, 'phone'))}]
+            views += [{'cam': c, 'key': k, 'label': CAM_LABELS.get((c, k), f'{c}/{k}'), 'fed': True, 'aspect': h / w,
+                       'blur_ranges': None if k == 'head_left' else RBY1_BLUR_WINDOWS.get((n, k), []),
+                       'blur_region': RBY1_BLUR_REGION.get((n, k))} for c, k in fed]
+            base = f'rby1-{slug(tdir.name)}__ep{n:02d}'
+            srcs = [ep / f"{v['cam']}.zarr" / f"{v['key']}.mp4" for v in views[1:]] + [src, Path(__file__)]
+            job = {'ep': str(ep), 'views': views, 'title': f'{rig}  ·  {task}  ·  episode {n:02d}', 'layout': 'phone_top', 'phone': phone, 'blur': True,
                    'mp4': str(vdir / f'{base}.mp4'), 'jpg': str(pdir / f'{base}.jpg'),
-                   'tile': a.tile * 2, 'crf': a.crf, 'threads': a.threads, 'poster_w': a.poster_width,
-                   'todo': a.force or stale(vdir / f'{base}.mp4', [src, Path(__file__)]) or stale(pdir / f'{base}.jpg', [src, Path(__file__)])}
+                   'tile': a.tile, 'crf': a.crf, 'threads': a.threads, 'poster_w': a.poster_width,
+                   'todo': a.force or stale(vdir / f'{base}.mp4', srcs) or stale(pdir / f'{base}.jpg', srcs)}
             jobs.append(job)
             entries.append({
                 'src': f'videos/{base}.mp4', 'poster': f'posters/{base}.jpg',
-                'title': f'{task} · {rig} · {i + 1:02d}',
+                'title': f'{task} · {rig} · ep {n:02d}',
                 'task': task, 'rig': rig, 'robot': robot, 'policy': policy,
-                'outcome': None, 'instruction': None, 'episode': i, 'run': PHONE_RUN[0],
-                'views': [{'label': 'handheld phone', 'fed': False}],
-                'note': 'Handheld phone recording; the policy camera streams were not logged for these clips.',
+                'outcome': {True: 'success', False: 'failure'}.get(RBY1_OUTCOME.get((tdir.name, n), meta.get('is_successful'))),
+                'instruction': meta.get('caption'),
+                'episode': n, 'run': tdir.name,
+                'views': [{'label': v['label'], 'fed': v['fed']} for v in views],
+                'note': "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
             })
 
     todo = [j for j in jobs if j['todo']]

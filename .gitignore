@@ -3,3 +3,4 @@ CLAUDE.local.md
 .claude/
 .DS_Store
 __pycache__/
+rollouts/

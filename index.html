@@ -27,7 +27,7 @@
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink3);font-size:13px}
 /* two-column browse: sticky embodiment → task tree on the left (same as the CAMX page), grouped results on the right */
 .browse{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start}
-.tree{position:sticky;top:84px;display:flex;flex-direction:column;gap:4px;flex:1 1 240px;max-width:280px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain}
+.tree{position:sticky;top:84px;padding-left:8px;margin-left:-8px;display:flex;flex-direction:column;gap:4px;flex:1 1 240px;max-width:280px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain}
 @media (max-width:760px){.tree{position:static;max-width:none;flex-basis:100%;max-height:none}}
 .tree button{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px 7px 8px;margin-left:-8px;font-size:15px;font-weight:500;border-radius:4px;color:var(--ink);min-width:0}
 .tree button:hover{color:var(--accent)}
@@ -69,6 +69,7 @@
 .task h3 .n{font:400 12px/1 var(--mono);color:var(--ink4)}
 .task .rate{font:400 12.5px/1.4 var(--mono);color:var(--ink3)}
 .task .rate b{color:var(--ink);font-weight:500}
+.task .rate .pol{color:var(--ink);font-weight:500;margin-right:8px}
 .task .rate .bar{display:inline-block;width:64px;height:4px;border-radius:2px;background:var(--barbg);vertical-align:middle;margin:0 6px 0 2px;overflow:hidden}
 .task .rate .bar i{display:block;height:100%;background:var(--good)}
 .task .instr{flex-basis:100%;color:var(--ink3);font-style:italic;font-size:13px;margin-top:2px}
@@ -158,7 +159,7 @@ const $=id=>document.getElementById(id);
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 // Embodiments (camera rigs) in presentation order; rigs missing from this list are appended in the
 // order they appear in videos.json. The camera list under each heading comes from the clips themselves.
-const EMBODIMENTS=['UMI','iPhUMI','GenRobot','New gripper + iPhone','RealSense','YAM bimanual','Humanoid (phone video)'];
+const EMBODIMENTS=['UMI','iPhUMI','GenRobot','New gripper + iPhone','RealSense','YAM bimanual','RB-Y1 humanoid'];
 const FACETS=[['policy','Policy'],['outcome','Outcome']];   // rig and task are chosen in the tree
 const OUTCOME={success:['pass','success'],failure:['fail','failure']};
 const fmtT=s=>s==null?'':(s>=60?`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`:`${s.toFixed(1)} s`);
@@ -174,9 +175,13 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
   const uniq=a=>[...new Set(a)];
   const rigs=uniq([...EMBODIMENTS.filter(r=>list.some(v=>v.rig===r)),...vals('rig')]);
   const succ=rows=>{const n=rows.filter(v=>v.outcome==='success').length,d=rows.filter(v=>v.outcome!=='unscored').length;return {n,d,p:pct(n,d)}};
+  // CAMUVA first, then any baselines in the order they appear
+  const polOrder=a=>[...a].sort((x,y)=>(x==='CAMUVA'?0:1)-(y==='CAMUVA'?0:1));
+  // success is always reported per policy: a baseline run sharing a task never pools into the CAMUVA number
+  const perPolicy=rows=>{const p=polOrder(vals('policy',rows));return p.length>1?p.map(x=>[x,succ(rows.filter(v=>v.policy===x))]):[[null,succ(rows)]]};
   const secs=list.reduce((a,v)=>a+(v.seconds||0),0);
-  const all=succ(list);
-  $('stats').innerHTML=[[list.length,'rollouts'],[fmtH(secs)+' h','of video'],[rigs.length,'embodiments'],[vals('task').length,'tasks'],[all.p,'success rate']]
+  const ours=list.filter(v=>v.policy==='CAMUVA'),all=succ(ours.length?ours:list);
+  $('stats').innerHTML=[[list.length,'rollouts'],[fmtH(secs)+' h','of video'],[rigs.length,'embodiments'],[vals('task').length,'tasks'],[all.p,ours.length?'CAMUVA success rate':'success rate']]
     .map(([v,k])=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
   $('footInfo').textContent=`CamUVA Rollouts · anonymized for review · ${list.length} rollouts, ${vals('task').length} tasks, ${rigs.length} embodiments`;
 
@@ -207,7 +212,7 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
         +`</div></div>`;
     });
     tree.innerHTML=h+'</div>';
-    tree.querySelectorAll('button').forEach(b=>b.onclick=()=>{S.rig=b.dataset.rig||null;S.task=b.dataset.task||null;render();$('browse').scrollIntoView({behavior:'smooth',block:'start'});});
+    tree.querySelectorAll('button').forEach(b=>b.onclick=()=>{S.rig=b.dataset.rig||null;S.task=b.dataset.task||null;FACETS.forEach(([k])=>delete state[k]);render();$('browse').scrollIntoView({behavior:'smooth',block:'start'});});
   };
 
   const render=()=>{
@@ -219,7 +224,6 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
       const rows=sel.filter(v=>v.rig===r);
       if(!rows.length)return;
       const tasks=vals('task',rowsAll);
-      const sr=succ(rowsAll);
       const views=uniq(rowsAll.flatMap(v=>(v.views||[]).map(x=>`${x.fed?1:0}|${x.label}`))).map(s=>{const [f,l]=s.split('|');return `<span class="chip ${+f?'in':'out'}">${esc(l)}</span>`}).join('');
       const sec=document.createElement('section');sec.className='emb';sec.id='emb-'+slug(r);
       sec.innerHTML=`<div class="ehead">
@@ -231,20 +235,21 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
           <div class="enums">
             <div><div class="v">${rowsAll.length}</div><div class="k">rollouts</div></div>
             <div><div class="v">${tasks.length}</div><div class="k">${tasks.length===1?'task':'tasks'}</div></div>
-            <div><div class="v">${sr.p}</div><div class="k">${sr.d?`success (${sr.n}/${sr.d})`:'unscored'}</div></div>
+            ${perPolicy(rowsAll).map(([p,s])=>`<div><div class="v">${s.p}</div><div class="k">${p?esc(p)+' ':''}${s.d?`success (${s.n}/${s.d})`:'unscored'}</div></div>`).join('')}
           </div>
         </div>
         ${tasks.length>1?`<div class="tasks">${tasks.map(t=>`<a class="chip btn${S.task===t?' on':''}" href="#task-${slug(r)}-${slug(t)}">${esc(t)}<span class="c">${rowsAll.filter(v=>v.task===t).length}</span></a>`).join('')}</div>`:''}`;
       tasks.forEach(t=>{
         const trAll=rowsAll.filter(v=>v.task===t),tr=rows.filter(v=>v.task===t);
         if(!tr.length)return;
-        const ts=succ(trAll);
         const instr=vals('instruction',trAll)[0];
         const pols=vals('policy',trAll);
+        const rates=perPolicy(trAll).map(([p,s])=>`<span class="rate">${p?`<span class="pol">${esc(p)}</span>`:''}${s.d
+          ?`<span class="bar"><i style="width:${Math.round(100*s.n/s.d)}%"></i></span><b>${s.n}/${s.d}</b> succeeded (${s.p})`:'not scored'}</span>`).join('');
         const div=document.createElement('div');div.className='task';div.id=`task-${slug(r)}-${slug(t)}`;
         div.innerHTML=`<div class="thead">
             <h3>${esc(t)}<span class="n">${tr.length===trAll.length?trAll.length:`${tr.length} of ${trAll.length}`} ${trAll.length===1?'rollout':'rollouts'}${pols.length>1?` · ${pols.length} policies`:''}</span></h3>
-            ${ts.d?`<span class="rate"><span class="bar"><i style="width:${Math.round(100*ts.n/ts.d)}%"></i></span><b>${ts.n}/${ts.d}</b> succeeded (${ts.p})</span>`:'<span class="rate">not scored</span>'}
+            ${rates}
             ${instr?`<div class="instr">“${esc(instr)}”</div>`:''}
           </div><div class="grid"></div>`;
         const g=div.querySelector('.grid');tr.forEach(v=>g.appendChild(card(v)));
@@ -253,9 +258,9 @@ fetch('videos.json').then(r=>r.json()).then(list=>{
       groups.appendChild(sec);
     });
     // count line under the heading, in the place the CAMX page keeps its breadcrumb
-    const ss=succ(sel);
     const path=[S.rig,S.task].filter(Boolean).map(x=>`<span>›</span><span>${esc(x)}</span>`).join('');
-    crumbs.innerHTML=`<span><b>${sel.length}</b> of ${list.length} rollouts</span>${path}${ss.d?`<span>·</span><span><b>${ss.n}/${ss.d}</b> succeeded (${ss.p})</span>`:''}`;
+    crumbs.innerHTML=`<span><b>${sel.length}</b> of ${list.length} rollouts</span>${path}`
+      +perPolicy(sel).filter(([,s])=>s.d).map(([p,s])=>`<span>·</span><span>${p?esc(p)+' ':''}<b>${s.n}/${s.d}</b> succeeded (${s.p})</span>`).join('');
     // facet chips: counts reflect the tree scope and the other active filters, so a chip shows how many cards it would leave
     facets.innerHTML='';
     FACETS.forEach(([k,label])=>{

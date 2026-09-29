@@ -15,4 +15,9 @@ rollout episodes (`<run>/episode_NNNNNN/<camera>.zarr/<view>.mp4` with their
 the policy). It needs ffmpeg and the Python packages zarr, numpy, av, opencv-python-headless
 and pillow. Re-runs are incremental.
 
+The RB-Y1 humanoid episodes have no logged third-person camera; their third-person view is a
+phone clip recorded on a separate device, paired with the episode by wall-clock time and then
+aligned to the robot's camera timestamps by cross-correlating motion (see the script's docstring).
+`tools/scan_faces.py` lists frames with visible faces so that episodes with bystanders are left out.
+
 This repository is anonymized for review.
