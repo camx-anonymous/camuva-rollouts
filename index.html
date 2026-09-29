@@ -24,7 +24,8 @@
 .bhead h2{margin:0}
 .crumbs{display:flex;align-items:center;gap:8px;font:400 12px/1.4 var(--mono);color:var(--ink4);margin-top:10px;flex-wrap:wrap}
 .crumbs b{font:500 15px/1 var(--sans);color:var(--ink)}
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink3);font-size:13px}
+/* legend lives in the results column, so the count line changing length under the heading never shifts it */
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink3);font-size:13px;margin:0 0 14px}
 /* two-column browse: sticky embodiment → task tree on the left (same as the CAMX page), grouped results on the right */
 .browse{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start}
 .tree{position:sticky;top:84px;padding-left:8px;margin-left:-8px;display:flex;flex-direction:column;gap:4px;flex:1 1 240px;max-width:280px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain}
@@ -123,11 +124,11 @@ footer{margin:0}
         <h2>Browse rollouts</h2>
         <div class="crumbs" id="crumbs"></div>
       </div>
-      <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span></div>
     </div>
     <div class="browse">
       <aside class="tree" id="tree" aria-label="Embodiments and tasks"></aside>
       <div class="results">
+        <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span></div>
         <div class="facets" id="facets"></div>
         <div id="groups"><p class="empty">Loading…</p></div>
       </div>
