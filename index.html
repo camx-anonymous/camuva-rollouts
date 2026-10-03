@@ -7,35 +7,40 @@
 <meta name="description" content="Policy rollout videos for CamUVA across handheld, single-arm, bimanual and humanoid rigs, with every camera view time-synced in one clip (anonymous submission).">
 <link rel="stylesheet" href="https://camx-anonymous.github.io/site.css">
 <style>
-/* Layout mirrors the CAMX landing page (hero → browse → footer); the chrome itself comes from site.css. */
+/* Layout mirrors the CAMX landing page (pinned site link, hero, tree + cards, record drawer with the clip beside it);
+   the chrome itself comes from site.css, and the rules below follow that page's inline styles. The rollouts are grouped
+   as in the paper's capability study: evaluation setting › task › policy or embodiment (CATS in the script). */
 /* ---------- hero ---------- */
-.hero{padding-top:96px;padding-bottom:64px}
-.hero h1{font-size:clamp(40px,6.2vw,80px);line-height:1;letter-spacing:-.035em;font-weight:500;margin:0;max-width:1000px;text-wrap:balance}
-.hero .lede{font-size:19px;line-height:1.55;color:var(--ink2);max-width:600px;margin:28px 0 0;text-wrap:pretty}
-.ctas{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:24px;margin-top:72px;padding-top:24px;border-top:1px solid var(--line)}
-.stats .v{font-size:36px;font-weight:500;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
-.stats .k{font-size:13px;color:var(--ink3);margin-top:4px}
-@media (max-width:640px){.hero{padding-top:56px;padding-bottom:40px}.stats{margin-top:48px;grid-template-columns:repeat(2,1fr)}.stats .v{font-size:30px}}
+.hero{padding-top:64px;padding-bottom:20px}
+.hero h1{font-size:clamp(30px,4.2vw,52px);line-height:1.05;letter-spacing:-.03em;font-weight:500;margin:0;text-wrap:balance}
+.stats{display:grid;grid-template-columns:repeat(5,auto);align-items:baseline;justify-content:space-between;gap:10px 20px;margin-top:28px;padding-top:16px;border-top:1px solid var(--line)}
+.stats>div{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+.stats .v{font-size:24px;font-weight:500;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.stats .k{font-size:15px;color:var(--ink3)}
+@media (max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}}
+/* the dataset link stays in the upper right corner while the page scrolls (this page has no top bar), its right
+   edge on the right edge of the .wrap content column; it sits under the drawer and its scrim. On a phone it is
+   smaller and the hero starts below it. */
+.button.pin{position:fixed;top:16px;right:max(var(--pad-x),calc((100% - var(--w-wide))/2 + var(--pad-x)));z-index:20;box-shadow:var(--shadow-md);font-size:18px;padding:16px 26px;gap:10px;border-radius:8px}
+.button.pin svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:640px){.hero{padding-top:60px;padding-bottom:16px}.stats{grid-template-columns:repeat(2,1fr);gap:10px 16px}.stats .v{font-size:20px}.stats .k{font-size:13px}.button.pin{top:10px;font-size:16px;padding:11px 16px;gap:8px}.button.pin svg{width:18px;height:18px}}
 
 /* ---------- browse ---------- */
-#browse{padding-top:40px;padding-bottom:96px;scroll-margin-top:60px}
-.bhead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--line)}
-.bhead h2{margin:0}
-.crumbs{display:flex;align-items:center;gap:8px;font:400 12px/1.4 var(--mono);color:var(--ink4);margin-top:10px;flex-wrap:wrap}
-.crumbs b{font:500 15px/1 var(--sans);color:var(--ink)}
-/* legend lives in the results column, so the count line changing length under the heading never shifts it */
-.legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink3);font-size:13px;margin:0 0 14px}
-/* two-column browse: sticky embodiment → task tree on the left (same as the CAMX page), grouped results on the right */
+#browse{padding-top:20px;padding-bottom:32px}
 .browse{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start}
-.tree{position:sticky;top:84px;padding-left:8px;margin-left:-8px;display:flex;flex-direction:column;gap:4px;flex:1 1 240px;max-width:280px;max-height:calc(100vh - 100px);overflow-y:auto;overscroll-behavior:contain}
-@media (max-width:760px){.tree{position:static;max-width:none;flex-basis:100%;max-height:none}}
+/* the tree sticks beside the cards and scrolls on its own when it is taller than the window. A scroll box has no
+   automatic minimum width, so the width is fixed: 380 of content + the padding that keeps the outdented top row
+   inside the box + the scrollbar gutter; the negative margins leave the cards where a 380px column puts them.
+   Below 980px the two columns no longer fit side by side (380 + 40 + 480) and the tree is a plain block on top. */
+.tree{position:sticky;top:20px;max-height:calc(100vh - 40px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line-hi) transparent;scrollbar-gutter:stable;display:flex;flex-direction:column;gap:4px;flex:0 0 400px;margin:0 -12px 0 -8px;padding:0 2px 4px 8px}
+.tree>*{flex:none}
+@media (max-width:980px){.tree{position:static;max-height:none;overflow:visible;flex-basis:100%;margin:0;padding:0}}
 .tree button{all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 10px 7px 8px;margin-left:-8px;font-size:15px;font-weight:500;border-radius:4px;color:var(--ink);min-width:0}
 .tree button:hover{color:var(--accent)}
-.tree button .c{font:400 12px/1 var(--mono);color:var(--ink4);flex:none}
+.tree button .c{font:400 12px/1 var(--mono);color:var(--ink4);flex:none;word-spacing:-.2em}
 .tree button.on{color:var(--accent);background:var(--accent-soft);font-weight:600}
 .tree .lab{display:flex;align-items:center;gap:10px;min-width:0}
-.tree .lab span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tree .lab span:last-child{overflow-wrap:anywhere;line-height:1.3;padding:.125em 0}
 .tree .dia{width:9px;height:9px;background:var(--ink);transform:rotate(45deg);flex:none}
 .tree .tick{width:12px;height:1px;background:var(--line-hi);flex:none}
 .tree .lvl1{margin-left:14px;border-left:1px solid var(--line-hi);display:flex;flex-direction:column;gap:2px;padding:4px 0}
@@ -45,245 +50,376 @@
 .tree .lvl2 button{font-size:13px;font-weight:400;margin-left:0;gap:8px}
 .tree .lvl2 .tick{width:10px;background:var(--line)}
 .tree .lvl2 button .c{font-size:11px}
-.results{flex:999 1 480px;min-width:0}
-.facets{display:flex;flex-direction:column;gap:4px;margin:0 0 8px}
-.facets .toolbar{margin:0}
-/* embodiment section */
-.emb{padding:40px 0 8px;scroll-margin-top:72px}
-.emb+.emb{border-top:1px solid var(--line)}
-.results>.emb:first-of-type{padding-top:24px}
-.emb .ehead{display:flex;flex-wrap:wrap;gap:8px 32px;align-items:flex-end;justify-content:space-between;margin-bottom:8px}
-.emb .kicker{font:400 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 8px}
-.emb h2{margin:0;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.emb h2 .robot{font:400 14px/1.4 var(--mono);color:var(--ink3);letter-spacing:0}
-.emb .enums{display:flex;gap:24px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
-.emb .enums .v{font-size:22px;font-weight:500;letter-spacing:-.02em;line-height:1.1}
-.emb .enums .k{font-size:12px;color:var(--ink3)}
-.emb .edesc{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;color:var(--ink3);font-size:13px;margin:6px 0 0}
-.emb .edesc .k{color:var(--ink3);font:500 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em}
-.emb .edesc .chips{display:flex;flex-wrap:wrap;gap:4px}
-.emb .tasks{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 0}
-/* task subsection */
-.task{padding:28px 0 8px;scroll-margin-top:72px}
-.task .thead{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;margin-bottom:14px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
-.task h3{margin:0;font-size:17px;display:flex;align-items:baseline;gap:10px}
-.task h3 .n{font:400 12px/1 var(--mono);color:var(--ink4)}
-.task .rate{font:400 12.5px/1.4 var(--mono);color:var(--ink3)}
-.task .rate b{color:var(--ink);font-weight:500}
-.task .rate .pol{color:var(--ink);font-weight:500;margin-right:8px}
-.task .rate .bar{display:inline-block;width:64px;height:4px;border-radius:2px;background:var(--barbg);vertical-align:middle;margin:0 6px 0 2px;overflow:hidden}
-.task .rate .bar i{display:block;height:100%;background:var(--good)}
-.task .instr{flex-basis:100%;color:var(--ink3);font-style:italic;font-size:13px;margin-top:2px}
-.grid{gap:28px 20px;grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-@media (max-width:480px){.grid{grid-template-columns:1fr}}
-.card .vid{aspect-ratio:4/3}
-.card .vid video{cursor:pointer}
-.card .title{word-break:normal;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.card .title .ep{color:var(--ink);font-weight:500}
-.card .title .chip{margin-left:auto}
+.tree .lvl2>div{display:flex;flex-direction:column}
+.tree .lvl3{margin-left:20px;border-left:1px solid var(--line);display:flex;flex-direction:column;padding:2px 0 4px}
+.tree .lvl3 button{font-size:12.5px;color:var(--ink2);padding:5px 8px 5px 6px}
+.tree .lvl3 button.on{color:var(--accent)}
+.tree .lvl3 .tick{width:8px}
+.tree .lvl3 .cs{display:block;font:400 10.5px/1.3 var(--mono);color:var(--ink4);margin-top:1px}
+.tree .lvl3 button.on .cs{color:var(--accent)}
+/* the cards scroll in a box of their own beside the tree: same sticky box, same height, same thin bar. The bar sits
+   outside the column, in the page margin, so the cards keep the column's right edge: the box is outdented by its 2px
+   of padding plus the scrollbar gutter, --sb, measured at load (0 where scrollbars overlay the content). Stacked
+   under the tree (narrow windows) the cards are a plain block. */
+.results{flex:999 1 480px;min-width:0;position:sticky;top:20px;max-height:calc(100vh - 40px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line-hi) transparent;scrollbar-gutter:stable;margin:0 calc(-2px - var(--sb,10px)) 0 -2px;padding:2px 2px 4px}
+@media (max-width:980px){.results{position:static;max-height:none;overflow:visible;margin:0;padding:0}}
+/* outcome filter; as tall as the first tree row, so the two line up */
+.filters{margin:0 0 16px;min-height:37px}
+/* one group per task and policy / embodiment, in the paper's order: its success rate (and the mean completion time of
+   its successes, as the paper reports for the cross-embodiment tasks), the source of the task's training data, the
+   numbers the paper quotes for baselines not run here, and the instruction the policy received, then its episodes */
+.cathead{padding:8px 0 4px}
+.cathead+.grp{border-top:0;padding-top:12px}
+.cathead .kicker{font:400 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 6px}
+.cathead h2{margin:0 0 6px;font:500 22px/1.2 var(--sans);letter-spacing:-.02em}
+.cathead p{margin:0;font-size:14px;line-height:1.5;color:var(--ink3);max-width:640px;text-wrap:pretty}
+.grp{padding:0 0 32px}
+.grp+.grp,.grp+.cathead{border-top:1px solid var(--line);padding-top:20px}
+.grp+.cathead{margin-top:8px;padding-top:28px}
+.grp:last-child{padding-bottom:8px}
+.ghead{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:0 0 14px}
+.ghead h3{margin:0;font:500 17px/1.3 var(--sans);letter-spacing:-.01em;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ghead h3 .sub{font-weight:400;color:var(--ink2)}
+.ghead .w{font:400 12px/1.5 var(--mono);color:var(--ink3)}
+.ghead .case{font:500 11px/1 var(--mono);padding:4px 7px;border-radius:999px;background:var(--chipbg);color:var(--ink2);white-space:nowrap}
+.ghead .case.id{background:var(--accent-soft);color:var(--accent)}
+.ghead .case.new{background:transparent;border:1px solid var(--line-hi);color:var(--ink2)}
+.ghead .rate{margin-left:auto;display:inline-flex;flex-wrap:wrap;justify-content:flex-end;gap:0 10px;font:400 12.5px/1.5 var(--mono);color:var(--ink3)}
+.ghead .rate .sr,.ghead .rate .tm{white-space:nowrap}
+.ghead .rate b{color:var(--ink);font-weight:500}
+.ghead .rate .bar{display:inline-block;width:64px;height:4px;border-radius:2px;background:var(--barbg);vertical-align:middle;margin:0 8px 0 0;overflow:hidden}
+.ghead .rate .bar i{display:block;height:100%;background:var(--good)}
+.ghead .src{flex-basis:100%;font:400 12px/1.6 var(--mono);color:var(--ink3);margin-top:2px}
+.ghead .src b{font-weight:500;color:var(--ink2)}
+.ghead .instr{flex-basis:100%;color:var(--ink3);font-style:italic;font-size:13px;line-height:1.5}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px 14px}
+@media (max-width:480px){.cards{grid-template-columns:1fr 1fr;gap:16px 12px}}
+.dcard{position:relative;display:flex;flex-direction:column;gap:8px;cursor:pointer;min-width:0}
+.dcard .thumb{position:relative;aspect-ratio:16/10;border-radius:8px;overflow:hidden;background:#000;border:1px solid var(--line)}
+/* the poster is the whole tiled clip; the card shows its third-person tile (sized and placed inline, see crop) */
+.dcard .thumb img{position:absolute;display:block;max-width:none}
+.dcard .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.dcard .play i{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:background .12s}
+.dcard .play i::after{content:"";width:0;height:0;border-left:9px solid #22211E;border-top:6px solid transparent;border-bottom:6px solid transparent;margin-left:2px}
+.dcard .thumb:hover .play i{background:var(--accent)}
+.dcard .thumb:hover .play i::after{border-left-color:#fff}
+.dcard .dur{position:absolute;right:8px;bottom:8px;font:400 11px/1 var(--mono);padding:3px 6px;background:rgba(34,33,30,.8);color:#FAF9F6;border-radius:4px}
+.dcard .tk{position:absolute;left:8px;top:8px;font:400 11px/1 var(--mono);padding:3px 6px;background:rgba(34,33,30,.8);color:#FAF9F6;border-radius:4px}
+.dcard .tk.pass{background:var(--good);color:#fff}
+.dcard .tk.fail{background:var(--crit);color:#fff}
+.dcard .body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.dcard .ttl{font-size:14px;font-weight:500;line-height:1.35;overflow-wrap:anywhere}
+.dcard:hover .ttl{color:var(--accent)}
+.dcard .meta{display:flex;gap:0 5px;font-size:12px;color:var(--ink3);flex-wrap:wrap}
+.dcard .meta .cat{color:var(--accent)}
 .chip.in{background:var(--good);color:#fff}
 .chip.out{background:var(--chipbg);color:var(--ink3);border-color:var(--line)}
-.empty{grid-column:1/-1;color:var(--ink3);padding:30px;text-align:center;border:1px dashed var(--line);border-radius:8px;background:var(--chipbg)}
 
-/* ---------- footer ---------- */
-footer{margin:0}
-.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.foot nav{display:flex;gap:20px;flex-wrap:wrap}
-.foot nav a,.foot nav button{color:var(--ink3);text-decoration:none;font:inherit;padding:0;border:0;background:none}
-.foot nav a:hover,.foot nav button:hover{color:var(--accent)}
-.cite{display:none;margin-top:20px;max-width:560px}
-.cite.show{display:block}
+/* ---------- rollout drawer ---------- */
+.drawer{position:fixed;top:0;right:0;width:min(560px,100vw);height:100vh;background:var(--panel);border-left:1px solid var(--line);box-shadow:var(--shadow-md);padding:24px 28px 40px;overflow:auto;z-index:30;transform:translateX(100%);visibility:hidden;transition:transform .18s cubic-bezier(.22,1,.36,1),visibility 0s .18s}
+.drawer.open{transform:none;visibility:visible;transition:transform .18s cubic-bezier(.22,1,.36,1)}
+.drawer .kicker{font:400 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.02em;color:var(--accent);margin:0 0 10px}
+.drawer h3{margin:0 0 4px;font:500 20px/1.25 var(--sans);letter-spacing:-.02em;padding-right:40px}
+.drawer .meta{display:flex;gap:6px;flex-wrap:wrap;font-size:13px;color:var(--ink3);margin:0 0 16px}
+.drawer .meta .cat{color:var(--accent)}
+.drawer .dim{color:var(--ink4)}
+.drawer .acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 6px}
+.drawer .acts .n{font:400 12px/1 var(--mono);color:var(--ink4);margin-left:6px;font-variant-numeric:tabular-nums}
+.drawer dl{display:grid;grid-template-columns:max-content 1fr;gap:9px 16px;font-size:13.5px;margin:18px 0 0}
+.drawer dt{font:500 11px/1.7 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink3)}
+.drawer dd{margin:0;word-break:break-word;color:var(--ink2)}
+.drawer dd.ins{color:var(--ink)}
+.drawer dd .chip{vertical-align:middle;margin-left:4px}
+.drawer dd .cam{display:block;margin:0 0 5px}
+.drawer dd .case{font:500 11px/1 var(--mono);padding:4px 7px;border-radius:999px;background:var(--chipbg);color:var(--ink2);white-space:nowrap;margin-left:6px;vertical-align:middle}
+.drawer dd .case.id{background:var(--accent-soft);color:var(--accent)}
+.drawer dd .case.new{background:transparent;border:1px solid var(--line-hi)}
+.drawer .close{position:absolute;top:14px;right:14px;width:32px;height:32px;padding:0;justify-content:center;border-radius:999px}
+.scrim{position:fixed;inset:0;background:rgba(20,15,5,.25);z-index:29;opacity:0;pointer-events:none;transition:opacity .18s}
+.scrim.show{opacity:1;pointer-events:auto}
+
+/* ---------- rollout clip: every camera view of the episode on one clock ---------- */
+/* opens with the rollout record: beside the drawer on a wide window, inside the drawer (above the record) on a narrow one.
+   The stage lets clicks through to the scrim, so a click beside the panel still closes the record. */
+.stage{position:fixed;top:0;left:0;right:min(560px,100vw);height:100vh;z-index:30;display:none;align-items:center;justify-content:center;padding:24px;pointer-events:none}
+.stage.show{display:flex}
+.cmp{width:100%;min-width:0}
+.stage .cmp{pointer-events:auto;max-height:100%;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-md);padding:16px 18px}
+.drawer .cmp{margin:16px 0 4px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.cmp .hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:0 0 10px}
+.cmp .hd b{font:500 14px/1.4 var(--sans)}
+.cmp .hd span{font:400 12px/1.5 var(--mono);color:var(--ink3);overflow-wrap:anywhere}
+.cmp figure{margin:0;min-width:0}
+.cmp figcaption{font:500 11px/1.7 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin:0 0 4px}
+.cmp .win{position:relative;overflow:hidden;border-radius:8px;background:#000;cursor:pointer;margin:0 auto}
+.cmp .win video{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+.cmp .win:fullscreen{width:100%!important;height:100%;aspect-ratio:auto!important;border-radius:0}
+.cmp .win .err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+.cmp .ctl{display:flex;align-items:center;gap:12px;margin-top:12px}
+.cmp .ctl button{width:36px;height:32px;padding:0;justify-content:center;flex:none}
+.cmp .ctl button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cmp .ctl input{flex:1;min-width:0;accent-color:var(--accent)}
+/* the instruction the policy received, under the clip like a subtitle */
+.cmp .cap{margin-top:12px}
+.cmp .cap .k{display:block;font:500 11px/1.7 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin:0 0 4px}
+.cmp .cap p{margin:0;font:400 14px/1.5 var(--sans);color:var(--ink);text-wrap:pretty;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
 
-<header class="topbar">
-  <div class="wrap">
-    <a class="brand" href="./"><span class="mark"></span><span class="name">CAMUVA</span></a>
-    <nav aria-label="Sections">
-      <a href="#browse">Rollouts</a>
-    </nav>
-    <a class="button primary cta" href="https://camx-anonymous.github.io/">CAMX Dataset</a>
-  </div>
-</header>
+<a class="button primary pin" href="https://camx-anonymous.github.io/"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6.5c0 1.7 3.6 3 8 3s8-1.3 8-3V5.5M4 12v6.5c0 1.7 3.6 3 8 3s8-1.3 8-3V12"/></svg>CamX Dataset</a>
 
 <main>
   <section class="hero wrap" id="overview">
     <h1>CamUVA Rollouts</h1>
-    <p class="lede">Time-synced multi-view clips of every evaluation episode</p>
-    <div class="ctas">
-      <a class="button accent lg" href="#browse">Browse rollouts</a>
-      <a class="button lg" href="https://camx-anonymous.github.io/">CAMX Dataset</a>
-    </div>
     <div class="stats" id="stats"></div>
   </section>
 
-  <section class="wrap" id="browse">
-    <div class="bhead">
-      <div>
-        <h2>Browse rollouts</h2>
-        <div class="crumbs" id="crumbs"></div>
-      </div>
-    </div>
+  <section class="wrap" id="browse" aria-label="Browse rollouts">
     <div class="browse">
-      <aside class="tree" id="tree" aria-label="Embodiments and tasks"></aside>
+      <aside class="tree" id="tree" aria-label="Evaluation settings and tasks"></aside>
       <div class="results">
-        <div class="legend"><span><span class="chip in">policy input</span> camera stream fed to the policy</span> <span><span class="chip out">not a policy input</span> recorded for the viewer only</span></div>
-        <div class="facets" id="facets"></div>
+        <div class="toolbar filters" id="filters"></div>
         <div id="groups"><p class="empty">Loading…</p></div>
       </div>
     </div>
   </section>
-
-  <footer>
-    <div class="wrap foot">
-      <span id="footInfo">CamUVA Rollouts · anonymized for review</span>
-      <nav>
-        <a href="https://github.com/camx-anonymous/camuva-rollouts">GitHub</a>
-        <button type="button" id="citeBtn">Cite</button>
-      </nav>
-    </div>
-    <div class="wrap"><pre class="cite" id="cite">@misc{camx2026,
-  title  = {CAMX: A Camera-Aware Cross-Embodiment Dataset},
-  author = {Anonymous Authors},
-  year   = {2026},
-  note   = {Under review}
-}</pre></div>
-  </footer>
 </main>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Rollout record"><button class="close" id="drawerClose" aria-label="Close">✕</button><div id="drawerBody"></div></div>
+<div class="stage" id="stage"></div>
+
 <script>
 // videos.json: [{ src, poster, title, task, rig, robot, policy, outcome: "success"|"failure"|null, instruction,
 //                 episode, seconds, width, height, views: [{label, fed}], note }]
-// Built by tools/build_videos.py from the raw rollout episodes.
+// Built by tools/build_videos.py from the raw rollout episodes. task / rig / policy are the build script's keys; the
+// names shown are the paper's (CATS, EMB, POL below).
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const $=id=>document.getElementById(id);
 const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-// Embodiments (camera rigs) in presentation order; rigs missing from this list are appended in the
-// order they appear in videos.json. The camera list under each heading comes from the clips themselves.
+/* The paper's model capability study: one CamUVA checkpoint, no embodiment- or task-specific fine-tuning, evaluated in two
+   settings. In-distribution embodiment: robot and gripper match the task's training data; the task is compared with the
+   specialist models of its benchmark (ABC-VLA was run here, on the same YAM; the UVA, Diffusion Policy and ModPack numbers
+   are the ones the paper quotes from those works). Cross-embodiment: four tasks, each collected with one embodiment, every
+   one evaluated with the same five embodiments on one ARX5 arm: the task's own (in-distribution), a CamX embodiment that
+   never performed the task (embodiment transfer), or an embodiment unseen in training. `src` = the embodiment the task's
+   training data was collected with (the rig key of videos.json, or a name when it is not one of the rigs here),
+   `share` = the task's share of the training tokens in percent, `sub` = what the groups under a task are. */
+const CATS=[
+  {id:'in-distribution',name:'In-distribution embodiment',sub:'policy',
+   desc:'Robot and gripper match the task’s training data. Each benchmark is at most 1% of the training tokens, and CamUVA is compared with models optimized or trained on that benchmark alone.',
+   tasks:[
+    {key:'cup arrangement',name:'Cup Arrangement',src:'UMI',share:0.4,reported:[['Multi-task UVA',65],['Multi-task DP',50]]},
+    {key:'towel fold',name:'Towel Folding',src:'UMI',share:0.4,reported:[['Multi-task UVA',70],['Multi-task DP',70]]},
+    {key:'dish in rack',name:'Dish in Rack',src:'YAM bimanual',share:1.0},
+    {key:'box on shelf',name:'Box Placement',src:'RB-Y1 humanoid',share:0.4,reported:[['ModPack DP, joint torque',60],['ModPack DP, torque-free',30]]}]},
+  {id:'cross-embodiment',name:'Cross-embodiment',sub:'embodiment',
+   desc:'Four tasks, each collected with one embodiment, all evaluated with the same checkpoint on five embodiments mounted on one ARX5 arm: the task’s own, two other CamX embodiments that never performed it, and two embodiments unseen in training.',
+   tasks:[
+    {key:'water pour',name:'Water Pouring',src:'UMI',share:0.7},
+    {key:'cup flip',name:'Cup Flipping',src:'iPhUMI',share:0.2},
+    {key:'cup in box',name:'Cup in Box',src:'GenRobot',share:0.6},
+    {key:'banana in pan',name:'Banana in Pan',src:'Robotiq',srcNote:'Robotiq gripper in DROID and RoboMIND',share:0.4}]}];
+// the five deployment embodiments of the cross-embodiment study in the paper's bar order (the first three are in CamX,
+// the last two unseen), then the in-distribution rigs; rigs missing here are appended in videos.json order
 const EMBODIMENTS=['UMI','iPhUMI','GenRobot','New gripper + iPhone','RealSense','YAM bimanual','RB-Y1 humanoid'];
-const FACETS=[['policy','Policy'],['outcome','Outcome']];   // rig and task are chosen in the tree
+const SEEN=new Set(['UMI','iPhUMI','GenRobot']);
+const EMB={'RealSense':'UMI gripper + RealSense'};                 // display names where the paper's differ from the rig key
+const POL={'CAMUVA':'CamUVA','ABC VLA baseline':'ABC-VLA'};
+const OURS='CAMUVA';
+const CASES={id:['in-distribution','id'],xfer:['embodiment transfer',''],new:['unseen embodiment','new']};
+const embName=r=>EMB[r]||r,polName=p=>POL[p]||p;
 const OUTCOME={success:['pass','success'],failure:['fail','failure']};
 const fmtT=s=>s==null?'':(s>=60?`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`:`${s.toFixed(1)} s`);
 const fmtH=s=>{const h=s/3600;return h>=10?h.toFixed(1):h.toFixed(2)};
 const pct=(a,b)=>b?Math.round(100*a/b)+'%':'–';
-const S={rig:null,task:null};                // tree selection
-const state={};                              // facet chips
-fetch('videos.json').then(r=>r.json()).then(list=>{
-  const groups=$('groups'),facets=$('facets'),crumbs=$('crumbs'),tree=$('tree');
-  if(!list.length){groups.innerHTML='<p class="empty">No rollout videos yet.</p>';return;}
-  list.forEach(v=>{if(!v.outcome)v.outcome='unscored';});
-  const vals=(k,rows=list)=>[...new Set(rows.map(v=>v[k]).filter(Boolean))];
-  const uniq=a=>[...new Set(a)];
-  const rigs=uniq([...EMBODIMENTS.filter(r=>list.some(v=>v.rig===r)),...vals('rig')]);
-  const succ=rows=>{const n=rows.filter(v=>v.outcome==='success').length,d=rows.filter(v=>v.outcome!=='unscored').length;return {n,d,p:pct(n,d)}};
-  // CAMUVA first, then any baselines in the order they appear
-  const polOrder=a=>[...a].sort((x,y)=>(x==='CAMUVA'?0:1)-(y==='CAMUVA'?0:1));
-  // success is always reported per policy: a baseline run sharing a task never pools into the CAMUVA number
-  const perPolicy=rows=>{const p=polOrder(vals('policy',rows));return p.length>1?p.map(x=>[x,succ(rows.filter(v=>v.policy===x))]):[[null,succ(rows)]]};
-  const secs=list.reduce((a,v)=>a+(v.seconds||0),0);
-  const ours=list.filter(v=>v.policy==='CAMUVA'),all=succ(ours.length?ours:list);
-  $('stats').innerHTML=[[list.length,'rollouts'],[fmtH(secs)+' h','of video'],[rigs.length,'embodiments'],[vals('task').length,'tasks'],[all.p,ours.length?'CAMUVA success rate':'success rate']]
-    .map(([v,k])=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('');
-  $('footInfo').textContent=`CamUVA Rollouts · anonymized for review · ${list.length} rollouts, ${vals('task').length} tasks, ${rigs.length} embodiments`;
+const ep=v=>v.episode!=null?`Episode ${String(v.episode).padStart(2,'0')}`:v.title||'';
+const plural=(n,w)=>`${n.toLocaleString()} ${w}${n===1?'':'s'}`;
+let L=[],SHOWN=[];
+const TASK={};CATS.forEach(c=>c.tasks.forEach(t=>{t.cat=c;TASK[t.key]=t}));
+// tree selection (setting › task › policy or embodiment), the outcome chip, and the index of the rollout whose record is open
+const S={cat:null,task:null,sub:null,outcome:null,open:null};
+const uniq=a=>[...new Set(a)];
+const vals=(k,rows=L)=>uniq(rows.map(v=>v[k]).filter(Boolean));
+const succ=rows=>{const n=rows.filter(v=>v.outcome==='success').length,d=rows.filter(v=>v.outcome!=='unscored').length;return {n,d,p:pct(n,d)}};
+// the mean completion time of the successful rollouts (the clip ends when the episode does), whole seconds as in the paper
+const meanT=rows=>{const ok=rows.filter(v=>v.outcome==='success'&&v.seconds!=null);return ok.length?Math.round(ok.reduce((a,v)=>a+v.seconds,0)/ok.length):null};
+// CamUVA first, then any baselines in the order they appear
+const pols=rows=>vals('policy',rows).sort((x,y)=>(x===OURS?0:1)-(y===OURS?0:1));
+const ours=rows=>{const o=rows.filter(v=>v.policy===OURS);return o.length?o:rows};
+const rigsOf=rows=>EMBODIMENTS.filter(r=>rows.some(v=>v.rig===r)).concat(vals('rig',rows).filter(r=>!EMBODIMENTS.includes(r)));
+// the group key of a rollout under its task: the policy (in-distribution) or the embodiment (cross-embodiment)
+const subOf=v=>v.t.cat.sub==='policy'?v.policy:v.rig;
+const subName=(t,k)=>t.cat.sub==='policy'?polName(k):embName(k);
+const subs=(t,rows)=>t.cat.sub==='policy'?pols(rows):rigsOf(rows);
+// which of the paper's three cases an embodiment is for a task (cross-embodiment setting)
+const caseOf=(t,rig)=>rig===t.src?'id':SEEN.has(rig)?'xfer':'new';
+const caseTag=(t,rig,cls)=>{const [name,c]=CASES[caseOf(t,rig)];return `<span class="${cls}${c?' '+c:''}">${name}</span>`};
 
-  const passFacets=v=>FACETS.every(([k])=>!state[k]||v[k]===state[k]);
-  const inScope=v=>(!S.rig||v.rig===S.rig)&&(!S.task||v.task===S.task);
-  const selected=()=>list.filter(v=>inScope(v)&&passFacets(v));
+function load(){fetch('videos.json').then(r=>r.json()).then(list=>{
+  if(!list.length){$('groups').innerHTML='<p class="empty">No rollout videos yet.</p>';return}
+  L=list;L.forEach((v,i)=>{v.i=i;if(!v.outcome)v.outcome='unscored';
+    // a task the paper does not list gets a setting of its own, so nothing is dropped
+    v.t=TASK[v.task]||(TASK[v.task]={key:v.task,name:v.task,cat:CATS.find(c=>c.id==='other')||CATS[CATS.push({id:'other',name:'Other rollouts',sub:'embodiment',desc:'',tasks:[]})-1]});
+    if(!v.t.cat.tasks.includes(v.t))v.t.cat.tasks.push(v.t)});
+  // deep links: #<setting>, #<setting>-<task> or #<setting>-<task>-<policy|embodiment> open the page on that row of the tree
+  const h=location.hash.slice(1);
+  CATS.forEach(c=>{if(h===c.id)S.cat=c.id;c.tasks.forEach(t=>{const rows=L.filter(v=>v.t===t);if(!rows.length)return;
+    if(h===`${c.id}-${slug(t.name)}`){S.cat=c.id;S.task=t.key}
+    subs(t,rows).forEach(k=>{if(h===`${c.id}-${slug(t.name)}-${slug(subName(t,k))}`){S.cat=c.id;S.task=t.key;S.sub=k}})})});
+  stats();tree();render();
+}).catch(()=>{$('groups').innerHTML='<p class="empty">Could not load the rollout list.</p>'})}
 
-  const card=v=>{
-    const oc=OUTCOME[v.outcome];
-    const ar=v.width&&v.height?` style="aspect-ratio:${v.width}/${v.height}"`:'';
-    const c=document.createElement('div');c.className='card';
-    c.innerHTML=`<div class="vid"${ar}><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline controls preload="none"></video></div>
-      <div class="title"><span class="ep">${v.episode!=null?`Episode ${String(v.episode).padStart(2,'0')}`:esc(v.title||'')}</span>${v.seconds!=null?`<span class="muted">· ${fmtT(v.seconds)}</span>`:''}${oc?`<span class="chip ${oc[0]}">${oc[1]}</span>`:''}</div>
-      <div class="meta">
-        ${v.policy?`<div><span class="k">Policy</span> ${esc(v.policy)}</div>`:''}
-        ${v.note?`<div>${esc(v.note)}</div>`:''}
-      </div>`;
-    return c;
-  };
+function stats(){const secs=L.reduce((a,v)=>a+(v.seconds||0),0);
+  $('stats').innerHTML=[[L.length.toLocaleString(),'rollouts'],[fmtH(secs)+' h','of video'],[vals('task').length,'tasks'],[rigsOf(L).length,'embodiments'],['1','CamUVA checkpoint']]
+    .map(([v,k])=>`<div><div class="v">${v}</div><div class="k">${k}</div></div>`).join('')}
 
-  const renderTree=()=>{
-    let h=`<button class="${!S.rig?'on':''}" data-rig=""><span class="lab"><span class="dia"></span><span>All embodiments</span></span><span class="c">${list.length}</span></button><div class="lvl1">`;
-    rigs.forEach(r=>{
-      const rows=list.filter(v=>v.rig===r);
-      h+=`<div><button class="${S.rig===r&&!S.task?'on':''}" data-rig="${esc(r)}"><span class="lab"><span class="tick"></span><span>${esc(r)}</span></span><span class="c">${rows.length}</span></button><div class="lvl2">`
-        +vals('task',rows).map(t=>{const n=rows.filter(v=>v.task===t).length;
-          return `<button class="${S.rig===r&&S.task===t?'on':''}" data-rig="${esc(r)}" data-task="${esc(t)}" title="${esc(r)} · ${esc(t)} · ${n} rollouts"><span class="lab"><span class="tick"></span><span>${esc(t)}</span></span><span class="c">${n}</span></button>`}).join('')
-        +`</div></div>`;
-    });
-    tree.innerHTML=h+'</div>';
-    tree.querySelectorAll('button').forEach(b=>b.onclick=()=>{S.rig=b.dataset.rig||null;S.task=b.dataset.task||null;FACETS.forEach(([k])=>delete state[k]);render();$('browse').scrollIntoView({behavior:'smooth',block:'start'});});
-  };
+/* ---------- browse: tree, cards ---------- */
+/* every tree row is a filter: all rollouts › evaluation setting › task › (under the task being browsed) its policies or
+   embodiments. The count on the right is what the paper reports for that row: the CamUVA success count of an
+   in-distribution task ("17/20"), the number of embodiments of a cross-embodiment task (the paper gives no pooled
+   number), and the success count of each policy / embodiment row. */
+const rate=rows=>{const s=succ(rows);return s.d?`${s.n}/${s.d}`:plural(rows.length,'rollout')};
+function row(on,f,lab,c,title){const d=Object.entries(f).map(([k,v])=>`data-${k}="${esc(v)}"`).join(' ');
+  return `<button type="button" class="${on?'on':''}" ${d}${title?` title="${esc(title)}"`:''}><span class="lab">${lab}</span><span class="c">${c}</span></button>`}
+function tree(){let h='';
+  CATS.forEach(c=>{const rows=L.filter(v=>v.t.cat===c);if(!rows.length)return;const tasks=c.tasks.filter(t=>rows.some(v=>v.t===t));
+    h+='<div>'+row(S.cat===c.id&&!S.task,{cat:c.id},'<span class="tick"></span><span>'+esc(c.name)+'</span>',plural(tasks.length,'task')+' · '+plural(rows.length,'rollout'),`${c.name} · ${plural(rows.length,'rollout')}`)+'<div class="lvl2">'
+      +tasks.map(t=>{const tr=rows.filter(v=>v.t===t),ks=subs(t,tr),act=S.cat===c.id&&S.task===t.key;
+        const cnt=c.sub==='policy'?rate(ours(tr)):plural(ks.length,'embodiment');
+        let o=row(act&&!S.sub,{cat:c.id,task:t.key},'<span class="tick"></span><span>'+esc(t.name)+'</span>',cnt,`${t.name} · ${plural(tr.length,'rollout')}`);
+        if(act&&ks.length>1)o+='<div class="lvl3">'+ks.map(k=>{const kr=tr.filter(v=>subOf(v)===k);
+          return row(S.sub===k,{cat:c.id,task:t.key,sub:k},'<span class="tick"></span><span>'+esc(subName(t,k))+(c.sub==='embodiment'?caseTag(t,k,'cs'):'')+'</span>',rate(kr),`${subName(t,k)} · ${plural(kr.length,'rollout')}`)}).join('')+'</div>';
+        return '<div>'+o+'</div>'}).join('')+'</div></div>'});
+  $('tree').innerHTML=row(!S.cat,{cat:''},'<span class="dia"></span><span>All rollouts</span>',plural(L.length,'rollout'))+'<div class="lvl1">'+h+'</div>'}
+/* a click in the tree re-renders the tree and the cards, and both can move the clicked row: the rows of the task left
+   behind collapse above it, and stacked above the cards (narrow windows) the page reflows. keep(b,fn) runs the re-render
+   fn for the clicked button b, then puts the row back under the pointer. Beside the cards a stuck tree sits at the same
+   place when the page is at the first card, so the page goes there and the tree scrolls its own box. Scroll amounts are
+   rounded to device pixels: the browser cuts a fraction off, which shows as a one-pixel twitch. */
+function keep(b,fn){const T=$('tree'),box=T.parentNode,d=b.dataset,y0=b.getBoundingClientRect().top,b0=box.getBoundingClientRect().top;
+  fn();
+  const cs=getComputedStyle(T),px=devicePixelRatio||1,snap=y=>Math.round(y*px)/px,by=y=>window.scrollBy({top:snap(y),behavior:'instant'});
+  const nb=[...T.querySelectorAll('button')].find(x=>x.dataset.cat===d.cat&&x.dataset.task===d.task&&x.dataset.sub===d.sub);
+  const dy=()=>nb?nb.getBoundingClientRect().top-y0:0;
+  if(cs.position!=='sticky'){by(dy());return}
+  by(box.getBoundingClientRect().top-Math.max(b0,parseFloat(cs.top)||0));
+  T.scrollTop+=snap(dy())}
 
-  const render=()=>{
-    const sel=selected();
-    groups.innerHTML='';
-    if(!sel.length)groups.innerHTML='<p class="empty">No rollouts match these filters.</p>';
-    rigs.forEach((r,ri)=>{
-      const rowsAll=list.filter(v=>v.rig===r);          // whole embodiment, for the header numbers
-      const rows=sel.filter(v=>v.rig===r);
-      if(!rows.length)return;
-      const tasks=vals('task',rowsAll);
-      const views=uniq(rowsAll.flatMap(v=>(v.views||[]).map(x=>`${x.fed?1:0}|${x.label}`))).map(s=>{const [f,l]=s.split('|');return `<span class="chip ${+f?'in':'out'}">${esc(l)}</span>`}).join('');
-      const sec=document.createElement('section');sec.className='emb';sec.id='emb-'+slug(r);
-      sec.innerHTML=`<div class="ehead">
-          <div>
-            <div class="kicker">Embodiment ${String(ri+1).padStart(2,'0')} / ${String(rigs.length).padStart(2,'0')}</div>
-            <h2>${esc(r)}${rowsAll[0].robot?`<span class="robot">${esc(rowsAll[0].robot)}</span>`:''}</h2>
-            ${views?`<div class="edesc"><span class="k">Cameras</span><span class="chips">${views}</span></div>`:''}
-          </div>
-          <div class="enums">
-            <div><div class="v">${rowsAll.length}</div><div class="k">rollouts</div></div>
-            <div><div class="v">${tasks.length}</div><div class="k">${tasks.length===1?'task':'tasks'}</div></div>
-            ${perPolicy(rowsAll).map(([p,s])=>`<div><div class="v">${s.p}</div><div class="k">${p?esc(p)+' ':''}${s.d?`success (${s.n}/${s.d})`:'unscored'}</div></div>`).join('')}
-          </div>
-        </div>
-        ${tasks.length>1?`<div class="tasks">${tasks.map(t=>`<a class="chip btn${S.task===t?' on':''}" href="#task-${slug(r)}-${slug(t)}">${esc(t)}<span class="c">${rowsAll.filter(v=>v.task===t).length}</span></a>`).join('')}</div>`:''}`;
-      tasks.forEach(t=>{
-        const trAll=rowsAll.filter(v=>v.task===t),tr=rows.filter(v=>v.task===t);
-        if(!tr.length)return;
-        const instr=vals('instruction',trAll)[0];
-        const pols=vals('policy',trAll);
-        const rates=perPolicy(trAll).map(([p,s])=>`<span class="rate">${p?`<span class="pol">${esc(p)}</span>`:''}${s.d
-          ?`<span class="bar"><i style="width:${Math.round(100*s.n/s.d)}%"></i></span><b>${s.n}/${s.d}</b> succeeded (${s.p})`:'not scored'}</span>`).join('');
-        const div=document.createElement('div');div.className='task';div.id=`task-${slug(r)}-${slug(t)}`;
-        div.innerHTML=`<div class="thead">
-            <h3>${esc(t)}<span class="n">${tr.length===trAll.length?trAll.length:`${tr.length} of ${trAll.length}`} ${trAll.length===1?'rollout':'rollouts'}${pols.length>1?` · ${pols.length} policies`:''}</span></h3>
-            ${rates}
-            ${instr?`<div class="instr">“${esc(instr)}”</div>`:''}
-          </div><div class="grid"></div>`;
-        const g=div.querySelector('.grid');tr.forEach(v=>g.appendChild(card(v)));
-        sec.appendChild(div);
-      });
-      groups.appendChild(sec);
-    });
-    // count line under the heading, in the place the CAMX page keeps its breadcrumb
-    const path=[S.rig,S.task].filter(Boolean).map(x=>`<span>›</span><span>${esc(x)}</span>`).join('');
-    crumbs.innerHTML=`<span><b>${sel.length}</b> of ${list.length} rollouts</span>${path}`
-      +perPolicy(sel).filter(([,s])=>s.d).map(([p,s])=>`<span>·</span><span>${p?esc(p)+' ':''}<b>${s.n}/${s.d}</b> succeeded (${s.p})</span>`).join('');
-    // facet chips: counts reflect the tree scope and the other active filters, so a chip shows how many cards it would leave
-    facets.innerHTML='';
-    FACETS.forEach(([k,label])=>{
-      const scope=list.filter(inScope);
-      const vs=vals(k,scope); if(vs.length<2)return;
-      const others=scope.filter(v=>FACETS.every(([o])=>o===k||!state[o]||v[o]===state[o]));
-      const cnt=x=>others.filter(v=>v[k]===x).length;
-      const row=document.createElement('div');row.className='toolbar';
-      row.innerHTML=`<span class="k">${label}</span> <span class="chip btn${state[k]?'':' on'}" data-k="${k}" data-v="">all<span class="c">${others.length}</span></span>`
-        +vs.map(x=>`<span class="chip btn${state[k]===x?' on':''}" data-k="${k}" data-v="${esc(x)}">${esc(x)}<span class="c">${cnt(x)}</span></span>`).join('');
-      facets.appendChild(row);
-    });
-    facets.querySelectorAll('.chip.btn').forEach(b=>b.onclick=()=>{state[b.dataset.k]=b.dataset.v||undefined;render();});
-    renderTree();
-  };
-  // pause every other clip when one starts, so the page never plays many videos at once
-  groups.addEventListener('play',e=>{groups.querySelectorAll('video').forEach(v=>{if(v!==e.target)v.pause();});},true);
-  $('citeBtn').onclick=()=>$('cite').classList.toggle('show');
-  render();
-  // deep links: #emb-<rig> or #task-<rig>-<task> scroll to the section once it exists
-  if(location.hash){const el=document.querySelector(location.hash.replace(/[^#\w-]/g,''));if(el)el.scrollIntoView();}
-}).catch(()=>{$('groups').innerHTML='<p class="empty">Could not load the rollout list.</p>';});
+const inScope=v=>(!S.cat||v.t.cat.id===S.cat)&&(!S.task||v.task===S.task)&&(!S.sub||subOf(v)===S.sub);
+/* the third-person tile of a clip, as fractions of the frame: [x, y, w, h]. Tile geometry of tools/build_videos.py
+   (Layout): a 32px title bar, then the third-person view first: beside one policy input, large beside two stacked
+   ones, top left of a 2x2 grid, or (RB-Y1) a 16:9 phone view across the top. */
+const BAR=32;
+function third(v){const W=v.width,H=v.height,n=(v.views||[]).length;
+  if(!W||!H||n<2)return [0,0,1,1];
+  if(n===2)return [0,BAR/H,.5,(H-BAR)/H];
+  if(n===3)return [0,BAR/H,2/3,(H-BAR)/H];
+  return Math.abs(H-BAR-W*3/4)<4?[0,BAR/H,.5,(H-BAR)/2/H]:[0,BAR/H,1,W*9/16/H]}
+/* the card shows a 16:10 window of that tile. A 4:3 tile is cut at the top first, which also drops the view label
+   drawn into the clip's corner (34px); a 16:9 tile is cut at the sides. Returned as the inline style of the poster. */
+function crop(v){const [x,y,w,h]=third(v),W=v.width||16,H=v.height||10,pw=w*W,ph=h*H;
+  const cw=Math.min(pw,ph*1.6),ch=cw/1.6,spare=ph-ch;
+  const cx=x*W+(pw-cw)/2,cy=y*H+Math.min(spare,Math.max(34,spare/2));
+  const f=n=>(100*n).toFixed(2)+'%';
+  return `width:${f(W/cw)};height:${f(H/ch)};left:${f(-cx/cw)};top:${f(-cy/ch)}`}
+function card(v){const oc=OUTCOME[v.outcome];
+  return `<article class="dcard" data-i="${v.i}"><div class="thumb" title="Play the rollout">${v.poster?`<img src="${esc(v.poster)}" alt="" loading="lazy" style="${crop(v)}">`:''}<span class="play"><i></i></span>${oc?`<span class="tk ${oc[0]}">${oc[1]}</span>`:''}<span class="dur">${fmtT(v.seconds)}</span></div>
+    <div class="body"><div class="ttl">${esc(ep(v))}</div><div class="meta"><span class="cat">${esc(v.t.name)}</span><span>›</span><span>${esc(subName(v.t,subOf(v)))}</span></div></div></article>`}
+
+// the line under a group's heading: where the task's training data comes from and its share of the training tokens,
+// then the success rates the paper quotes for the baselines of that benchmark that were not run here
+function srcLine(t){const src=t.srcNote||(t.src?embName(t.src):null);
+  return `${src?`training data: <b>${esc(src)}</b>`:''}${t.share!=null?`${src?' · ':''}<b>${t.share.toFixed(1)}%</b> of the training tokens`:''}`
+    +(t.reported?` · reported: ${t.reported.map(([n,p])=>`${esc(n)} <b>${p}%</b>`).join(', ')}`:'')}
+function render(){const scope=L.filter(inScope);
+  // outcome chips: counts within the tree selection, so a chip shows how many cards it would leave
+  const outs=['success','failure','unscored'].filter(o=>scope.some(v=>v.outcome===o));
+  if(S.outcome&&!outs.includes(S.outcome))S.outcome=null;
+  const sel=scope.filter(v=>!S.outcome||v.outcome===S.outcome);
+  $('filters').innerHTML=(outs.length>1?`<span class="k">Outcome</span> <span class="chip btn${S.outcome?'':' on'}" data-o="">all<span class="c">${scope.length}</span></span>`
+      +outs.map(o=>`<span class="chip btn${S.outcome===o?' on':''}" data-o="${o}">${o}<span class="c">${scope.filter(v=>v.outcome===o).length}</span></span>`).join(''):'');
+  SHOWN=[];let h='';
+  CATS.forEach((c,ci)=>{const cr=sel.filter(v=>v.t.cat===c);if(!cr.length)return;
+    // the setting's heading when more than one setting is on the page
+    if(!S.cat)h+=`<div class="cathead"><div class="kicker">Evaluation ${String(ci+1).padStart(2,'0')} / ${String(CATS.length).padStart(2,'0')}</div><h2>${esc(c.name)}</h2>${c.desc?`<p>${esc(c.desc)}</p>`:''}</div>`;
+    c.tasks.forEach(t=>{const all=L.filter(v=>v.t===t),ks=subs(t,all);
+      ks.forEach(k=>{const ga=all.filter(v=>subOf(v)===k),g=sel.filter(v=>v.t===t&&subOf(v)===k);
+        if(!g.length)return;
+        const s=succ(ga),tm=c.sub==='embodiment'?meanT(ga):null,instr=vals('instruction',ga)[0];
+        g.forEach(v=>SHOWN.push(v.i));
+        h+=`<section class="grp"><div class="ghead"><h3>${esc(t.name)}<span class="sub">${esc(subName(t,k))}</span></h3>${c.sub==='embodiment'?caseTag(t,k,'case'):''}<span class="w">${g.length===ga.length?plural(ga.length,'rollout'):`${g.length} of ${plural(ga.length,'rollout')}`}</span>
+          <span class="rate"><span class="sr">${s.d?`<span class="bar"><i style="width:${Math.round(100*s.n/s.d)}%"></i></span><b>${s.n}/${s.d}</b> succeeded (${s.p})`:'not scored'}</span>${tm!=null?`<span class="tm">mean completion <b>${tm} s</b></span>`:''}</span>
+          <div class="src">${srcLine(t)}</div>
+          ${instr?`<div class="instr">“${esc(instr)}”</div>`:''}</div><div class="cards">${g.map(card).join('')}</div></section>`})})});
+  $('groups').innerHTML=h||'<p class="empty">No rollouts match this filter.</p>'}
+
+/* ---------- rollout drawer ---------- */
+/* clip viewer: the episode's one clip, which tiles every camera view on a common clock (tools/build_videos.py) */
+let CMP=null;
+const wide=matchMedia('(min-width:1100px)');
+function closeCmp(){if(!CMP)return;if(document.fullscreenElement)document.exitFullscreen();CMP.querySelectorAll('video').forEach(v=>{v.pause();v.removeAttribute('src');v.load()});CMP.remove();CMP=null;$('stage').classList.remove('show')}
+function placeCmp(){if(!CMP)return;const st=$('stage'),dl=$('drawerBody').querySelector('dl');
+  if(wide.matches){st.appendChild(CMP);st.classList.add('show')}else{st.classList.remove('show');if(dl)dl.before(CMP)}}
+wide.addEventListener('change',placeCmp);
+function openCmp(v){closeCmp();const A=v.width&&v.height?v.width/v.height:16/9;
+  const el=CMP=document.createElement('div');el.className='cmp';
+  el.innerHTML=`<div class="hd"><b>Rollout</b><span>${esc(v.t.name)} · ${esc(subName(v.t,subOf(v)))} · ep ${esc(String(v.episode??'').padStart(2,'0'))}</span></div>
+    <figure><figcaption>All camera views, time-synced</figcaption><div class="win"><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline preload="auto"></video></div></figure>
+    ${v.instruction?`<div class="cap"><span class="k">Instruction</span><p>${esc(v.instruction)}</p></div>`:''}
+    <div class="ctl"><button type="button" aria-label="Pause">❚❚</button><input type="range" min="0" max="1000" value="0" aria-label="Position in the clip"><button type="button" aria-label="Full screen" title="Full screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>`;
+  const a=el.querySelector('video'),w=el.querySelector('.win'),[pp,fs]=el.querySelectorAll('.ctl button'),pos=el.querySelector('.ctl input');
+  const toggle=()=>{if(a.paused){const p=a.play();if(p&&p.catch)p.catch(()=>{})}else a.pause()};
+  a.addEventListener('timeupdate',()=>{if(a.duration)pos.value=1000*a.currentTime/a.duration});
+  a.addEventListener('play',()=>{pp.textContent='❚❚';pp.setAttribute('aria-label','Pause')});
+  a.addEventListener('pause',()=>{pp.textContent='▶';pp.setAttribute('aria-label','Play')});
+  a.addEventListener('error',()=>w.insertAdjacentHTML('beforeend','<div class="err">Clip failed to load.</div>'));
+  pos.oninput=()=>{if(a.duration)a.currentTime=pos.value/1000*a.duration};
+  pp.onclick=toggle;w.onclick=toggle;
+  fs.onclick=()=>{if(document.fullscreenElement)document.exitFullscreen();else if(w.requestFullscreen)w.requestFullscreen()};
+  // the window takes the aspect of the clip; its height is capped so the window, the instruction and the controls fit the stage
+  w.style.aspectRatio=A;w.style.width=`min(100%,calc((100vh - ${v.instruction?270:200}px)*${A.toFixed(4)}))`;
+  placeCmp();
+  if(a.readyState>=2)toggle();else a.addEventListener('loadeddata',()=>{if(CMP===el)toggle()},{once:true})}
+
+function drawer(i){const v=L[i];if(!v)return;S.open=i;const t=v.t,c=t.cat,oc=OUTCOME[v.outcome],k=SHOWN.indexOf(i);
+  const src=t.srcNote||(t.src?embName(t.src):null);
+  const kv=[['Outcome',oc?`<span class="chip ${oc[0]}">${oc[1]}</span>`:'<span class="dim">not scored</span>'],
+    ['Evaluation',esc(c.name)+(c.sub==='embodiment'?caseTag(t,v.rig,'case'):'')],
+    ['Task',esc(t.name)+(src?` <span class="dim">· training data: ${esc(src)}${t.share!=null?`, ${t.share.toFixed(1)}% of the training tokens`:''}</span>`:'')],
+    v.instruction?['Instruction','“'+esc(v.instruction)+'”','ins']:null,
+    v.policy?['Policy',esc(polName(v.policy))]:null,['Embodiment',esc(embName(v.rig))],v.robot?['Robot',esc(v.robot)]:null,
+    ['Duration',esc(fmtT(v.seconds))],
+    (v.views||[]).length?['Cameras',v.views.map(x=>`<span class="cam">${esc(x.label)} <span class="chip ${x.fed?'in':'out'}">${x.fed?'policy input':'not a policy input'}</span></span>`).join('')]:null,
+    ['Clip',`<a href="${esc(v.src)}" target="_blank" rel="noopener">mp4</a>${v.width&&v.height?` <span class="dim">${v.width}×${v.height} · every view on one clock</span>`:''}`],
+    v.note?['Note',esc(v.note)]:null].filter(Boolean);
+  $('drawerBody').innerHTML=`<div class="kicker">Rollout record</div><h3>${esc(ep(v))}</h3>
+    <div class="meta"><span class="cat">${esc(t.name)}</span><span>›</span><span>${esc(subName(t,subOf(v)))}</span>${c.sub==='embodiment'&&v.policy?`<span>·</span><span>${esc(polName(v.policy))}</span>`:''}</div>
+    ${SHOWN.length>1&&k>=0?`<div class="acts"><button type="button" id="prev">‹ Previous</button><button type="button" id="next">Next ›</button><span class="n">${k+1} of ${SHOWN.length}</span></div>`:''}
+    <dl>${kv.map(([k,v,c])=>`<dt>${k}</dt><dd${c?` class="${c}"`:''}>${v}</dd>`).join('')}</dl>`;
+  const p=$('prev'),n=$('next');if(p){p.onclick=()=>step(-1);n.onclick=()=>step(1)}
+  $('drawer').classList.add('open');$('scrim').classList.add('show');openCmp(v)}
+// the previous / next rollout of the cards shown, in their order on the page
+function step(d){const k=SHOWN.indexOf(S.open);if(k<0||SHOWN.length<2)return;drawer(SHOWN[(k+d+SHOWN.length)%SHOWN.length])}
+function closeDrawer(){closeCmp();S.open=null;$('drawer').classList.remove('open');$('scrim').classList.remove('show')}
+
+document.addEventListener('DOMContentLoaded',()=>{load();
+  // --sb: the gutter a thin scrollbar takes from its box in this browser, for the outdent of the cards' scroll box (.results);
+  // measured on a box that reserves it the same way, since a stable gutter and a shown scrollbar need not be the same width
+  const sb=document.body.appendChild(document.createElement('div'));sb.style.cssText='position:absolute;visibility:hidden;width:50px;overflow-y:auto;scrollbar-gutter:stable;scrollbar-width:thin';
+  document.documentElement.style.setProperty('--sb',sb.offsetWidth-sb.clientWidth+'px');sb.remove();
+  $('tree').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    keep(b,()=>{S.cat=b.dataset.cat||null;S.task=b.dataset.task||null;S.sub=b.dataset.sub||null;S.outcome=null;tree();render();$('groups').parentNode.scrollTop=0});
+    const t=S.task&&TASK[S.task];
+    history.replaceState(null,'',S.cat?'#'+[S.cat,t&&slug(t.name),S.sub&&slug(subName(t,S.sub))].filter(Boolean).join('-'):location.pathname+location.search)});
+  $('filters').addEventListener('click',e=>{const b=e.target.closest('.chip.btn');if(!b)return;S.outcome=b.dataset.o||null;render()});
+  $('groups').addEventListener('click',e=>{const c=e.target.closest('.dcard');if(c)drawer(+c.dataset.i)});
+  $('drawerClose').onclick=closeDrawer;$('scrim').onclick=closeDrawer;
+  document.addEventListener('keydown',e=>{if(S.open==null||document.fullscreenElement)return;
+    if(e.key==='Escape')closeDrawer();
+    else if((e.key==='ArrowLeft'||e.key==='ArrowRight')&&e.target.tagName!=='INPUT'){e.preventDefault();step(e.key==='ArrowLeft'?-1:1)}});
+});
 </script>
 </body>
 </html>
