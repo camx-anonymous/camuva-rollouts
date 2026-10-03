@@ -263,6 +263,10 @@ function load(){fetch('videos.json').then(r=>r.json()).then(list=>{
     // a task the paper does not list gets a setting of its own, so nothing is dropped
     v.t=TASK[v.task]||(TASK[v.task]={key:v.task,name:v.task,cat:CATS.find(c=>c.id==='other')||CATS[CATS.push({id:'other',name:'Other rollouts',sub:'embodiment',desc:'',tasks:[]})-1]});
     if(!v.t.cat.tasks.includes(v.t))v.t.cat.tasks.push(v.t)});
+  // episodes are shown numbered 00, 01, … within their task › embodiment › policy group in recorded order, so a group
+  // whose published episodes start later in the run (RB-Y1: 0-9 were never covered by the phone) still reads 00-09
+  const grp={};L.forEach(v=>{const k=[v.task,v.rig,v.policy].join('\u0000');(grp[k]=grp[k]||[]).push(v)});
+  Object.values(grp).forEach(g=>g.sort((a,b)=>(a.episode??a.i)-(b.episode??b.i)).forEach((v,n)=>{v.recorded=v.episode;v.episode=n}));
   // deep links: #<setting>, #<setting>-<task> or #<setting>-<task>-<policy|embodiment> open the page on that row of the tree
   const h=location.hash.slice(1);
   CATS.forEach(c=>{if(h===c.id)S.cat=c.id;c.tasks.forEach(t=>{const rows=L.filter(v=>v.t===t);if(!rows.length)return;
