@@ -314,12 +314,14 @@ function keep(b,fn){const T=$('tree'),box=T.parentNode,d=b.dataset,y0=b.getBound
 const inScope=v=>(!S.cat||v.t.cat.id===S.cat)&&(!S.task||v.task===S.task)&&(!S.sub||subOf(v)===S.sub);
 /* the third-person tile of a clip, as fractions of the frame: [x, y, w, h]. Tile geometry of tools/build_videos.py
    (Layout): a 32px title bar, then the third-person view first: beside one policy input, large beside two stacked
-   ones, top left of a 2x2 grid, or (RB-Y1) a 16:9 phone view across the top. */
+   ones, top left of a 2x2 grid, or (RB-Y1, five views) a 16:9 phone view on the left as tall as the 2x2 grid of
+   policy cameras beside it. */
 const BAR=32;
 function third(v){const W=v.width,H=v.height,n=(v.views||[]).length;
   if(!W||!H||n<2)return [0,0,1,1];
   if(n===2)return [0,BAR/H,.5,(H-BAR)/H];
   if(n===3)return [0,BAR/H,2/3,(H-BAR)/H];
+  if(n===5)return [0,BAR/H,(H-BAR)*16/9/W,(H-BAR)/H];
   return Math.abs(H-BAR-W*3/4)<4?[0,BAR/H,.5,(H-BAR)/2/H]:[0,BAR/H,1,W*9/16/H]}
 /* the card shows a 16:10 window of that tile. A 4:3 tile is cut at the top first, which also drops the view label
    drawn into the clip's corner (34px); a 16:9 tile is cut at the sides. Returned as the inline style of the poster. */

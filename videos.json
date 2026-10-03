@@ -7417,21 +7417,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 49.8
  },
  {
@@ -7452,21 +7456,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 72.3
  },
  {
@@ -7487,22 +7495,26 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
-  "seconds": 58.3
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
+  "seconds": 58.2
  },
  {
   "src": "videos/rby1-box-placing-together__ep13.mp4",
@@ -7522,21 +7534,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 57.9
  },
  {
@@ -7557,21 +7573,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 27.0
  },
  {
@@ -7592,21 +7612,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 77.3
  },
  {
@@ -7627,21 +7651,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 76.2
  },
  {
@@ -7662,21 +7690,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 69.7
  },
  {
@@ -7697,21 +7729,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 82.3
  },
  {
@@ -7732,21 +7768,25 @@
     "fed": false
    },
    {
-    "label": "head cam",
+    "label": "head stereo left",
     "fed": true
    },
    {
-    "label": "left wrist cam",
+    "label": "head stereo right",
     "fed": true
    },
    {
-    "label": "right wrist cam",
+    "label": "left wrist",
+    "fed": true
+   },
+   {
+    "label": "right wrist",
     "fed": true
    }
   ],
-  "note": "Third-person view is a separate phone recording, aligned to the robot clock by wall-clock time and motion. Faces seen by the robot cameras are blurred.",
-  "width": 1440,
-  "height": 1142,
+  "note": "Third-person view is a separate phone recording, aligned to the robot clock by recording order and motion. Faces seen by the robot cameras are blurred. Occasional single-frame colour flicker in the robot camera views comes from an unstable camera connection during the run; the policy operated under that connection and received these frames as shown.",
+  "width": 2208,
+  "height": 734,
   "seconds": 42.5
  }
 ]

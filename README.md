@@ -16,8 +16,11 @@ the policy). It needs ffmpeg and the Python packages zarr, numpy, av, opencv-pyt
 and pillow. Re-runs are incremental.
 
 The RB-Y1 humanoid episodes have no logged third-person camera; their third-person view is a
-phone clip recorded on a separate device, paired with the episode by wall-clock time and then
-aligned to the robot's camera timestamps by cross-correlating motion (see the script's docstring).
+phone clip recorded on a separate device. The robot cameras are stamped on a monotonic clock, so the
+script first finds the one clock offset under which the phone clips cover the most episodes, pairs
+each episode with the clip overlapping it, and then aligns the two by cross-correlating motion (see
+the script's docstring). The RB-Y1 clips show the phone view on the left and the four policy cameras
+(head stereo left and right, left and right wrist) in a 2x2 grid beside it.
 `tools/scan_faces.py` lists frames with visible faces so that episodes with bystanders are left out.
 
 This repository is anonymized for review.
