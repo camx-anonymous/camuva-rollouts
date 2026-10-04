@@ -1,13 +1,17 @@
 # CAMUVA Rollouts
 
-Rollout videos: https://camx-anonymous.github.io/camuva-rollouts/
+Rollout videos: https://camx-anonymous.github.io/#rollouts
+
+The gallery is a section of the CamX dataset page (the `camx-anonymous.github.io` repository), which reads
+`videos.json`, `videos/` and `posters/` from this repository. This repository has no page of its own any more:
+`index.html` only forwards old links to that section.
 
 One clip per evaluation episode. Each clip tiles every camera on the rig: the fixed
 third-person camera first (viewer only, never seen by the policy), then the camera streams
 the policy actually received, marked POLICY INPUT. All tiles are resampled onto a common
 30 fps clock from their per-frame timestamps and anchored to the third-person camera, so
 the views are time-aligned. Episodes carry the success / failure label recorded during the
-evaluation. `videos.json` lists every clip and `index.html` renders the gallery from it.
+evaluation. `videos.json` lists every clip; the dataset page renders the gallery from it.
 
 `tools/build_videos.py` regenerates `videos/`, `posters/` and `videos.json` from the raw
 rollout episodes (`<run>/episode_NNNNNN/<camera>.zarr/<view>.mp4` with their
