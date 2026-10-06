@@ -18,14 +18,12 @@
 .stats .v{font-size:24px;font-weight:500;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
 .stats .k{font-size:15px;color:var(--ink3)}
 @media (max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}}
-/* the Home link and the link to the dataset page stay in the upper right corner while the page scrolls (this page has no top bar), its right
+/* the link to the dataset page stays in the upper right corner while the page scrolls (this page has no top bar), its right
    edge on the right edge of the .wrap content column; it sits under the drawer and its scrim. On a phone it is
    smaller and the hero starts below it. */
-.pins{position:fixed;top:16px;right:max(var(--pad-x),calc((100% - var(--w-wide))/2 + var(--pad-x)));z-index:20;display:flex;gap:10px}
-.button.pin{box-shadow:var(--shadow-md);font-size:18px;padding:16px 26px;gap:10px;border-radius:8px}
-.button.pin.home{background:var(--bg)}
+.button.pin{position:fixed;top:16px;right:max(var(--pad-x),calc((100% - var(--w-wide))/2 + var(--pad-x)));z-index:20;box-shadow:var(--shadow-md);font-size:18px;padding:16px 26px;gap:10px;border-radius:8px}
 .button.pin svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-@media (max-width:640px){.hero{padding-top:60px;padding-bottom:16px}.stats{grid-template-columns:repeat(2,1fr);gap:10px 16px}.stats .v{font-size:20px}.stats .k{font-size:13px}.pins{top:10px;gap:8px}.button.pin{font-size:16px;padding:11px 16px;gap:8px}.button.pin svg{width:18px;height:18px}}
+@media (max-width:640px){.hero{padding-top:60px;padding-bottom:16px}.stats{grid-template-columns:repeat(2,1fr);gap:10px 16px}.stats .v{font-size:20px}.stats .k{font-size:13px}.button.pin{top:10px;font-size:16px;padding:11px 16px;gap:8px}.button.pin svg{width:18px;height:18px}}
 
 /* ---------- browse ---------- */
 #browse{padding-top:20px;padding-bottom:32px}
@@ -171,7 +169,7 @@
 </head>
 <body>
 
-<nav class="pins" aria-label="Sites"><a class="button pin home" href="https://camx-anonymous.github.io/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>Home</a><a class="button primary pin" href="https://camx-anonymous.github.io/camx-dataset/"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6.5c0 1.7 3.6 3 8 3s8-1.3 8-3V5.5M4 12v6.5c0 1.7 3.6 3 8 3s8-1.3 8-3V12"/></svg>CamX Dataset</a></nav>
+<a class="button primary pin" href="https://camx-anonymous.github.io/camx-dataset/"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6.5c0 1.7 3.6 3 8 3s8-1.3 8-3V5.5M4 12v6.5c0 1.7 3.6 3 8 3s8-1.3 8-3V12"/></svg>CamX Dataset</a>
 
 <main>
   <section class="hero wrap" id="overview">
@@ -214,14 +212,14 @@ const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/
    `sub` = what the groups under a task are. */
 const CATS=[
   {id:'in-distribution',name:'In-distribution embodiment',sub:'policy',
-   desc:'Robot and gripper match the task’s training data. Each benchmark is at most 1% of the training tokens, and CamUVA is compared with models optimized or trained on that benchmark alone.',
+   desc:'Robot and gripper match the training data. Each benchmark is at most 1% of the training tokens; the baselines are specialists on it.',
    tasks:[
     {key:'cup arrangement',name:'Cup Arrangement',src:'UMI',emb:'Single UMI',share:0.4,reported:[['Multi-task UVA',65],['Multi-task DP',50]]},
     {key:'towel fold',name:'Towel Folding',src:'UMI',emb:'Single UMI',share:0.4,reported:[['Multi-task UVA',70],['Multi-task DP',70]]},
     {key:'dish in rack',name:'Dish in Rack',src:'YAM bimanual',emb:'Bimanual YAM',share:1.0},
     {key:'box on shelf',name:'Box Placement',src:'RB-Y1 humanoid',emb:'RB-Y1',share:0.4,reported:[['ModPack DP, joint torque',60],['ModPack DP, torque-free',30]]}]},
   {id:'cross-embodiment',name:'Cross-embodiment',sub:'embodiment',
-   desc:'Four tasks, each collected with one embodiment, all evaluated with the same checkpoint on five embodiments mounted on one ARX5 arm: the task’s own, two other CamX embodiments that never performed it, and two embodiments unseen in training.',
+   desc:'Four tasks, each collected with one embodiment, run with one checkpoint on five embodiments on an ARX5 arm: the task’s own, two CamX embodiments that never did it, two unseen in training.',
    tasks:[
     {key:'water pour',name:'Water Pouring',src:'UMI',share:0.7},
     {key:'cup flip',name:'Cup Flipping',src:'iPhUMI',share:0.2},
@@ -343,7 +341,7 @@ function card(v){const oc=OUTCOME[v.outcome];
 // the line under a group's heading: where the task's training data comes from and its share of the training tokens,
 // then the success rates the paper quotes for the baselines of that benchmark that were not run here
 function srcLine(t){const src=t.srcNote||t.emb||(t.src?embName(t.src):null);
-  return `${src?`training data: <b>${esc(src)}</b>`:''}${t.share!=null?`${src?' · ':''}<b>${t.share.toFixed(1)}%</b> of the training tokens`:''}`
+  return `${src?`trained on <b>${esc(src)}</b>`:''}${t.share!=null?`${src?' · ':''}<b>${t.share.toFixed(1)}%</b> of tokens`:''}`
     +(t.reported?` · reported: ${t.reported.map(([n,p])=>`${esc(n)} <b>${p}%</b>`).join(', ')}`:'')}
 function render(){const scope=L.filter(inScope);
   // outcome chips: counts within the tree selection, so a chip shows how many cards it would leave
@@ -362,10 +360,10 @@ function render(){const scope=L.filter(inScope);
         const s=succ(ga),tm=c.sub==='embodiment'?meanT(ga):null,instr=vals('instruction',ga)[0];
         g.forEach(v=>SHOWN.push(v.i));
         h+=`<section class="grp"><div class="ghead"><h3>${esc(t.name)}<span class="sub">${esc(subName(t,k))}</span></h3>${c.sub==='embodiment'?caseTag(t,k,'case'):''}<span class="w">${g.length===ga.length?plural(ga.length,'rollout'):`${g.length} of ${plural(ga.length,'rollout')}`}</span>
-          <span class="rate"><span class="sr">${s.d?`<span class="bar"><i style="width:${Math.round(100*s.n/s.d)}%"></i></span><b>${s.n}/${s.d}</b> succeeded (${s.p})`:'not scored'}</span>${tm!=null?`<span class="tm">mean completion <b>${tm} s</b></span>`:''}</span>
+          <span class="rate"><span class="sr">${s.d?`<span class="bar"><i style="width:${Math.round(100*s.n/s.d)}%"></i></span><b>${s.n}/${s.d}</b> succeeded`:'not scored'}</span>${tm!=null?`<span class="tm">mean <b>${tm} s</b></span>`:''}</span>
           <div class="src">${srcLine(t)}</div>
           ${instr?`<div class="instr">“${esc(instr)}”</div>`:''}</div><div class="cards">${g.map(card).join('')}</div></section>`})})});
-  $('groups').innerHTML=h||'<p class="empty">No rollouts match this filter.</p>'}
+  $('groups').innerHTML=h||'<p class="empty">No rollouts match.</p>'}
 
 /* ---------- rollout drawer ---------- */
 /* clip viewer: the episode's one clip, which tiles every camera view on a common clock (tools/build_videos.py) */
@@ -378,7 +376,7 @@ wide.addEventListener('change',placeCmp);
 function openCmp(v){closeCmp();const A=v.width&&v.height?v.width/v.height:16/9;
   const el=CMP=document.createElement('div');el.className='cmp';
   el.innerHTML=`<div class="hd"><b>Rollout</b><span>${esc(v.t.name)} · ${esc(subName(v.t,subOf(v)))} · ep ${esc(String(v.episode??'').padStart(2,'0'))}</span></div>
-    <figure><figcaption>All camera views, time-synced</figcaption><div class="win"><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline preload="auto"></video></div></figure>
+    <figure><figcaption>All views, synced</figcaption><div class="win"><video src="${esc(v.src)}"${v.poster?` poster="${esc(v.poster)}"`:''} muted loop playsinline preload="auto"></video></div></figure>
     ${v.instruction?`<div class="cap"><span class="k">Instruction</span><p>${esc(v.instruction)}</p></div>`:''}
     <div class="ctl"><button type="button" aria-label="Pause">❚❚</button><input type="range" min="0" max="1000" value="0" aria-label="Position in the clip"><button type="button" aria-label="Full screen" title="Full screen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>`;
   const a=el.querySelector('video'),w=el.querySelector('.win'),[pp,fs]=el.querySelectorAll('.ctl button'),pos=el.querySelector('.ctl input');
@@ -399,12 +397,12 @@ function drawer(i){const v=L[i];if(!v)return;S.open=i;const t=v.t,c=t.cat,oc=OUT
   const src=t.srcNote||(t.src?embName(t.src):null);
   const kv=[['Outcome',oc?`<span class="chip ${oc[0]}">${oc[1]}</span>`:'<span class="dim">not scored</span>'],
     ['Evaluation',esc(c.name)+(c.sub==='embodiment'?caseTag(t,v.rig,'case'):'')],
-    ['Task',esc(t.name)+(src?` <span class="dim">· training data: ${esc(src)}${t.share!=null?`, ${t.share.toFixed(1)}% of the training tokens`:''}</span>`:'')],
+    ['Task',esc(t.name)+(src?` <span class="dim">· trained on ${esc(src)}${t.share!=null?`, ${t.share.toFixed(1)}% of tokens`:''}</span>`:'')],
     v.instruction?['Instruction','“'+esc(v.instruction)+'”','ins']:null,
     v.policy?['Policy',esc(polName(v.policy))]:null,['Embodiment',esc(embName(v.rig))],v.robot?['Robot',esc(v.robot)]:null,
     ['Duration',esc(fmtT(v.seconds))],
-    (v.views||[]).length?['Cameras',v.views.map(x=>`<span class="cam">${esc(x.label)} <span class="chip ${x.fed?'in':'out'}">${x.fed?'policy input':'not a policy input'}</span></span>`).join('')]:null,
-    ['Clip',`<a href="${esc(v.src)}" target="_blank" rel="noopener">mp4</a>${v.width&&v.height?` <span class="dim">${v.width}×${v.height} · every view on one clock</span>`:''}`],
+    (v.views||[]).length?['Cameras',v.views.map(x=>`<span class="cam">${esc(x.label)} <span class="chip ${x.fed?'in':'out'}">${x.fed?'policy input':'viewer only'}</span></span>`).join('')]:null,
+    ['Clip',`<a href="${esc(v.src)}" target="_blank" rel="noopener">mp4</a>${v.width&&v.height?` <span class="dim">${v.width}×${v.height}</span>`:''}`],
     v.note?['Note',esc(v.note)]:null].filter(Boolean);
   $('drawerBody').innerHTML=`<div class="kicker">Rollout record</div><h3>${esc(ep(v))}</h3>
     <div class="meta"><span class="cat">${esc(t.name)}</span><span>›</span><span>${esc(subName(t,subOf(v)))}</span>${c.sub==='embodiment'&&v.policy?`<span>·</span><span>${esc(polName(v.policy))}</span>`:''}</div>
