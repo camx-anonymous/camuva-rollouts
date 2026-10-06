@@ -74,9 +74,7 @@
    numbers the paper quotes for baselines not run here, and the instruction the policy received, then its episodes */
 .cathead{padding:8px 0 4px}
 .cathead+.grp{border-top:0;padding-top:12px}
-.cathead .kicker{font:400 12px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 6px}
 .cathead h2{margin:0 0 6px;font:500 22px/1.2 var(--sans);letter-spacing:-.02em}
-.cathead p{margin:0;font-size:14px;line-height:1.5;color:var(--ink3);max-width:640px;text-wrap:pretty}
 .grp{padding:0 0 32px}
 .grp+.grp,.grp+.cathead{border-top:1px solid var(--line);padding-top:20px}
 .grp+.cathead{margin-top:8px;padding-top:28px}
@@ -214,14 +212,12 @@ const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/
    `sub` = what the groups under a task are. */
 const CATS=[
   {id:'in-distribution',name:'In-distribution embodiment',sub:'policy',
-   desc:'Robot and gripper match the training data. Each benchmark is at most 1% of the training tokens; the baselines are specialists on it.',
    tasks:[
     {key:'cup arrangement',name:'Cup Arrangement',src:'UMI',emb:'Single UMI',share:0.4,reported:[['Multi-task UVA',65],['Multi-task DP',50]]},
     {key:'towel fold',name:'Towel Folding',src:'UMI',emb:'Single UMI',share:0.4,reported:[['Multi-task UVA',70],['Multi-task DP',70]]},
     {key:'dish in rack',name:'Dish in Rack',src:'YAM bimanual',emb:'Bimanual YAM',share:1.0},
     {key:'box on shelf',name:'Box Placement',src:'RB-Y1 humanoid',emb:'RB-Y1',share:0.4,reported:[['ModPack DP, joint torque',60],['ModPack DP, torque-free',30]]}]},
   {id:'cross-embodiment',name:'Cross-embodiment',sub:'embodiment',
-   desc:'Four tasks, each collected with one embodiment, run with one checkpoint on five embodiments on an ARX5 arm: the task’s own, two CamX embodiments that never did it, two unseen in training.',
    tasks:[
     {key:'water pour',name:'Water Pouring',src:'UMI',share:0.7},
     {key:'cup flip',name:'Cup Flipping',src:'iPhUMI',share:0.2},
@@ -267,7 +263,7 @@ function load(){fetch('videos.json').then(r=>r.json()).then(list=>{
   if(!list.length){$('groups').innerHTML='<p class="empty">No rollout videos yet.</p>';return}
   L=list;L.forEach((v,i)=>{v.i=i;if(!v.outcome)v.outcome='unscored';
     // a task the paper does not list gets a setting of its own, so nothing is dropped
-    v.t=TASK[v.task]||(TASK[v.task]={key:v.task,name:v.task,cat:CATS.find(c=>c.id==='other')||CATS[CATS.push({id:'other',name:'Other rollouts',sub:'embodiment',desc:'',tasks:[]})-1]});
+    v.t=TASK[v.task]||(TASK[v.task]={key:v.task,name:v.task,cat:CATS.find(c=>c.id==='other')||CATS[CATS.push({id:'other',name:'Other rollouts',sub:'embodiment',tasks:[]})-1]});
     if(!v.t.cat.tasks.includes(v.t))v.t.cat.tasks.push(v.t)});
   // episodes are shown numbered 00, 01, … within their task › embodiment › policy group in recorded order, so a group
   // whose published episodes start later in the run (RB-Y1: 0-9 were never covered by the phone) still reads 00-09
@@ -355,7 +351,7 @@ function render(){const scope=L.filter(inScope);
   SHOWN=[];let h='';
   CATS.forEach((c,ci)=>{const cr=sel.filter(v=>v.t.cat===c);if(!cr.length)return;
     // the setting's heading when more than one setting is on the page
-    if(!S.cat)h+=`<div class="cathead"><div class="kicker">Evaluation ${String(ci+1).padStart(2,'0')} / ${String(CATS.length).padStart(2,'0')}</div><h2>${esc(c.name)}</h2>${c.desc?`<p>${esc(c.desc)}</p>`:''}</div>`;
+    if(!S.cat)h+=`<div class="cathead"><h2>${esc(c.name)}</h2></div>`;
     c.tasks.forEach(t=>{const all=L.filter(v=>v.t===t),ks=subs(t,all);
       ks.forEach(k=>{const ga=all.filter(v=>subOf(v)===k),g=sel.filter(v=>v.t===t&&subOf(v)===k);
         if(!g.length)return;
