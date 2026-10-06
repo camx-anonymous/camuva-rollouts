@@ -213,10 +213,10 @@ const slug=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/
 const CATS=[
   {id:'in-distribution',name:'In-distribution embodiment',sub:'policy',
    tasks:[
-    {key:'cup arrangement',name:'Cup Arrangement',src:'UMI',emb:'Single UMI',share:0.4,reported:[['Multi-task UVA',65],['Multi-task DP',50]]},
-    {key:'towel fold',name:'Towel Folding',src:'UMI',emb:'Single UMI',share:0.4,reported:[['Multi-task UVA',70],['Multi-task DP',70]]},
+    {key:'cup arrangement',name:'Cup Arrangement',src:'UMI',emb:'Single UMI',share:0.4},
+    {key:'towel fold',name:'Towel Folding',src:'UMI',emb:'Single UMI',share:0.4},
     {key:'dish in rack',name:'Dish in Rack',src:'YAM bimanual',emb:'Bimanual YAM',share:1.0},
-    {key:'box on shelf',name:'Box Placement',src:'RB-Y1 humanoid',emb:'RB-Y1',share:0.4,reported:[['ModPack DP, joint torque',60],['ModPack DP, torque-free',30]]}]},
+    {key:'box on shelf',name:'Box Placement',src:'RB-Y1 humanoid',emb:'RB-Y1',share:0.4}]},
   {id:'cross-embodiment',name:'Cross-embodiment',sub:'embodiment',
    tasks:[
     {key:'water pour',name:'Water Pouring',src:'UMI',share:0.7},
@@ -336,11 +336,9 @@ function card(v){const oc=OUTCOME[v.outcome];
   return `<article class="dcard" data-i="${v.i}"><div class="thumb" title="Play the rollout">${v.poster?`<img src="${esc(v.poster)}" alt="" loading="lazy" style="${crop(v)}">`:''}<span class="play"><i></i></span>${oc?`<span class="tk ${oc[0]}">${oc[1]}</span>`:''}<span class="dur">${fmtT(v.seconds)}</span></div>
     <div class="body"><div class="ttl">${esc(ep(v))}</div><div class="meta"><span class="cat">${esc(v.t.name)}</span><span>›</span><span>${esc(subName(v.t,subOf(v)))}</span></div></div></article>`}
 
-// the line under a group's heading: where the task's training data comes from and its share of the training tokens,
-// then the success rates the paper quotes for the baselines of that benchmark that were not run here
+// the line under a group's heading: where the task's training data comes from and its share of the training tokens
 function srcLine(t){const src=t.srcNote||t.emb||(t.src?embName(t.src):null);
-  return `${src?`trained on <b>${esc(src)}</b>`:''}${t.share!=null?`${src?' · ':''}<b>${t.share.toFixed(1)}%</b> of tokens`:''}`
-    +(t.reported?` · reported: ${t.reported.map(([n,p])=>`${esc(n)} <b>${p}%</b>`).join(', ')}`:'')}
+  return `${src?`trained on <b>${esc(src)}</b>`:''}${t.share!=null?`${src?' · ':''}<b>${t.share.toFixed(1)}%</b> of tokens`:''}`}
 function render(){const scope=L.filter(inScope);
   // outcome chips: counts within the tree selection, so a chip shows how many cards it would leave
   const outs=['success','failure','unscored'].filter(o=>scope.some(v=>v.outcome===o));
