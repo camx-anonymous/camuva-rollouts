@@ -79,6 +79,8 @@ DUPLICATES = {'UMI_cup': 'UMI_uva-cup-arrangement'}
 CAPTION_MISMATCH = {'iPhUMI_banana-in-box'}
 # (run, episode) pairs left out of the gallery on purpose
 EXCLUDE = {('UMI_uva-towel', 20), ('UMI_uva-towel', 21), ('YAM_plates-on-rack', 10)}
+# (run, episode) -> seconds into the episode at which the published clip starts; the burnt-in clock keeps episode time
+TRIM = {('YAM_plates-on-rack', 5): 130.0}
 
 # RB-Y1 humanoid: <root>/rby1_cam_uva/<task>/<run>/episode_*; task directory -> (rig, task, policy, robot)
 RBY1_TASKS = {'box_placing_together': ('RB-Y1 humanoid', 'box on shelf', 'CAMUVA', 'Rainbow RB-Y1 (wheeled bimanual)')}
@@ -429,6 +431,8 @@ def render_episode(job):
     else:
         ref = ts[0]                                          # third-person camera anchors the clock
         t0, t1 = ref[0], ref[-1]
+    start = t0                                               # episode time zero for the clock overlay
+    t0 += job.get('trim', 0.0)
     n = int(np.floor((t1 - t0) * FPS)) + 1
     grid = t0 + np.arange(n) / FPS
     idx = [nearest(t, grid) for t in ts]
@@ -465,7 +469,7 @@ def render_episode(job):
                     tiles[j] = lay.fit(src, j)
                     last[j] = i
             stale = [float(a[k]) if a[k] > STALE_S else None for a in age]
-            frame = lay.compose(tiles, grid[k] - t0, stale)
+            frame = lay.compose(tiles, grid[k] - start, stale)
             if k == poster_k:
                 save_poster(frame, job['jpg'], job['poster_w'])
             enc.stdin.write(frame.tobytes())
@@ -656,6 +660,7 @@ def main():
             job = {'ep': str(ep), 'views': views, 'title': f'{rig}  ·  {task}  ·  episode {n:02d}',
                    'mp4': str(vdir / f'{base}.mp4'), 'jpg': str(pdir / f'{base}.jpg'),
                    'tile': a.tile, 'crf': a.crf, 'threads': a.threads, 'poster_w': a.poster_width,
+                   'trim': TRIM.get((run, n), 0.0),
                    'todo': a.force or stale(vdir / f'{base}.mp4', srcs) or stale(pdir / f'{base}.jpg', srcs)}
             jobs.append(job)
             entries.append({
@@ -666,6 +671,7 @@ def main():
                 'instruction': None if run in CAPTION_MISMATCH else meta.get('caption'),
                 'episode': n, 'run': run,
                 'views': [{'label': v['label'], 'fed': v['fed']} for v in views],
+                **({'trim': TRIM[(run, n)], 'note': f'Clip starts {TRIM[(run, n)]:.0f} s into the episode.'} if (run, n) in TRIM else {}),
             })
 
     # RB-Y1 humanoid: policy cameras from the episode, third-person view from the separately recorded phone clip

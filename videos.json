@@ -6921,7 +6921,9 @@
   ],
   "width": 960,
   "height": 752,
-  "seconds": 272.9
+  "seconds": 142.9,
+  "trim": 130.0,
+  "note": "Clip starts 130 s into the episode."
  },
  {
   "src": "videos/yam-plates-on-rack__ep06.mp4",

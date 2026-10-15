@@ -193,7 +193,7 @@
 
 <script>
 // videos.json: [{ src, poster, title, task, rig, robot, policy, outcome: "success"|"failure"|null, instruction,
-//                 episode, seconds, width, height, views: [{label, fed}], note }]
+//                 episode, seconds, width, height, views: [{label, fed}], note, trim }]
 // Built by tools/build_videos.py from the raw rollout episodes. task / rig / policy are the build script's keys; the
 // names shown are the paper's (CATS, EMB, POL below).
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -244,8 +244,9 @@ const S={cat:null,task:null,sub:null,outcome:null,open:null};
 const uniq=a=>[...new Set(a)];
 const vals=(k,rows=L)=>uniq(rows.map(v=>v[k]).filter(Boolean));
 const succ=rows=>{const n=rows.filter(v=>v.outcome==='success').length,d=rows.filter(v=>v.outcome!=='unscored').length;return {n,d,p:pct(n,d)}};
-// the mean completion time of the successful rollouts (the clip ends when the episode does), whole seconds as in the paper
-const meanT=rows=>{const ok=rows.filter(v=>v.outcome==='success'&&v.seconds!=null);return ok.length?Math.round(ok.reduce((a,v)=>a+v.seconds,0)/ok.length):null};
+// the mean completion time of the successful rollouts (the clip ends when the episode does; a clip cut to start later in
+// its episode carries the cut-off seconds as `trim`), whole seconds as in the paper
+const meanT=rows=>{const ok=rows.filter(v=>v.outcome==='success'&&v.seconds!=null);return ok.length?Math.round(ok.reduce((a,v)=>a+v.seconds+(v.trim||0),0)/ok.length):null};
 // CamUVA first, then any baselines in the order they appear
 const pols=rows=>vals('policy',rows).sort((x,y)=>(x===OURS?0:1)-(y===OURS?0:1));
 const ours=rows=>{const o=rows.filter(v=>v.policy===OURS);return o.length?o:rows};
