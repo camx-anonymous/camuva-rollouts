@@ -6919,11 +6919,11 @@
     "fed": true
    }
   ],
+  "trim": 130.0,
+  "note": "Clip starts 130 s into the episode.",
   "width": 960,
   "height": 752,
-  "seconds": 142.9,
-  "trim": 130.0,
-  "note": "Clip starts 130 s into the episode."
+  "seconds": 142.9
  },
  {
   "src": "videos/yam-plates-on-rack__ep06.mp4",
@@ -7400,6 +7400,456 @@
   "width": 960,
   "height": 752,
   "seconds": 182.1
+ },
+ {
+  "src": "videos/iphumi-cup-saucer-flip-return__ep00.mp4",
+  "poster": "posters/iphumi-cup-saucer-flip-return__ep00.jpg",
+  "title": "cup to saucer, flip and return \u00b7 iPhUMI \u00b7 ep 00",
+  "task": "cup to saucer, flip and return",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the cup and place it on the saucer. After the cup is tipped over, flip it back upright, then put it back to where it was.",
+  "episode": 0,
+  "run": "iPhUMI_cup-saucer-flip-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 23.1
+ },
+ {
+  "src": "videos/iphumi-cup-saucer-flip-return__ep01.mp4",
+  "poster": "posters/iphumi-cup-saucer-flip-return__ep01.jpg",
+  "title": "cup to saucer, flip and return \u00b7 iPhUMI \u00b7 ep 01",
+  "task": "cup to saucer, flip and return",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the cup and place it on the saucer. After the cup is tipped over, flip it back upright, then put it back to where it was.",
+  "episode": 1,
+  "run": "iPhUMI_cup-saucer-flip-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 25.5
+ },
+ {
+  "src": "videos/iphumi-cup-saucer-flip-return__ep02.mp4",
+  "poster": "posters/iphumi-cup-saucer-flip-return__ep02.jpg",
+  "title": "cup to saucer, flip and return \u00b7 iPhUMI \u00b7 ep 02",
+  "task": "cup to saucer, flip and return",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the cup and place it on the saucer. After the cup is tipped over, flip it back upright, then put it back to where it was.",
+  "episode": 2,
+  "run": "iPhUMI_cup-saucer-flip-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 23.5
+ },
+ {
+  "src": "videos/iphumi-cup-saucer-flip-return__ep03.mp4",
+  "poster": "posters/iphumi-cup-saucer-flip-return__ep03.jpg",
+  "title": "cup to saucer, flip and return \u00b7 iPhUMI \u00b7 ep 03",
+  "task": "cup to saucer, flip and return",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "failure",
+  "instruction": "Pick up the cup and place it on the saucer. After the cup is tipped over, flip it back upright, then put it back to where it was.",
+  "episode": 3,
+  "run": "iPhUMI_cup-saucer-flip-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 28.1
+ },
+ {
+  "src": "videos/iphumi-cup-saucer-flip-return__ep04.mp4",
+  "poster": "posters/iphumi-cup-saucer-flip-return__ep04.jpg",
+  "title": "cup to saucer, flip and return \u00b7 iPhUMI \u00b7 ep 04",
+  "task": "cup to saucer, flip and return",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the cup and place it on the saucer. After the cup is tipped over, flip it back upright, then put it back to where it was.",
+  "episode": 4,
+  "run": "iPhUMI_cup-saucer-flip-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 25.7
+ },
+ {
+  "src": "videos/iphumi-ball-saucer-return__ep00.mp4",
+  "poster": "posters/iphumi-ball-saucer-return__ep00.jpg",
+  "title": "ball to saucer and back \u00b7 iPhUMI \u00b7 ep 00",
+  "task": "ball to saucer and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the saucer, and then return it to where it was.",
+  "episode": 0,
+  "run": "iPhUMI_ball-saucer-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 18.5
+ },
+ {
+  "src": "videos/iphumi-ball-saucer-return__ep01.mp4",
+  "poster": "posters/iphumi-ball-saucer-return__ep01.jpg",
+  "title": "ball to saucer and back \u00b7 iPhUMI \u00b7 ep 01",
+  "task": "ball to saucer and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the saucer, and then return it to where it was.",
+  "episode": 1,
+  "run": "iPhUMI_ball-saucer-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 18.6
+ },
+ {
+  "src": "videos/iphumi-ball-saucer-return__ep02.mp4",
+  "poster": "posters/iphumi-ball-saucer-return__ep02.jpg",
+  "title": "ball to saucer and back \u00b7 iPhUMI \u00b7 ep 02",
+  "task": "ball to saucer and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the saucer, and then return it to where it was.",
+  "episode": 2,
+  "run": "iPhUMI_ball-saucer-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 20.1
+ },
+ {
+  "src": "videos/iphumi-ball-saucer-return__ep03.mp4",
+  "poster": "posters/iphumi-ball-saucer-return__ep03.jpg",
+  "title": "ball to saucer and back \u00b7 iPhUMI \u00b7 ep 03",
+  "task": "ball to saucer and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the saucer, and then return it to where it was.",
+  "episode": 3,
+  "run": "iPhUMI_ball-saucer-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 14.7
+ },
+ {
+  "src": "videos/iphumi-ball-saucer-return__ep04.mp4",
+  "poster": "posters/iphumi-ball-saucer-return__ep04.jpg",
+  "title": "ball to saucer and back \u00b7 iPhUMI \u00b7 ep 04",
+  "task": "ball to saucer and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the saucer, and then return it to where it was.",
+  "episode": 4,
+  "run": "iPhUMI_ball-saucer-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 15.2
+ },
+ {
+  "src": "videos/iphumi-ball-plate-return__ep00.mp4",
+  "poster": "posters/iphumi-ball-plate-return__ep00.jpg",
+  "title": "ball to plate and back \u00b7 iPhUMI \u00b7 ep 00",
+  "task": "ball to plate and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the plate, and then return it to where it was.",
+  "episode": 0,
+  "run": "iPhUMI_ball-plate-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 20.6
+ },
+ {
+  "src": "videos/iphumi-ball-plate-return__ep01.mp4",
+  "poster": "posters/iphumi-ball-plate-return__ep01.jpg",
+  "title": "ball to plate and back \u00b7 iPhUMI \u00b7 ep 01",
+  "task": "ball to plate and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "failure",
+  "instruction": "Pick up the tennis ball and place it on the plate, and then return it to where it was.",
+  "episode": 1,
+  "run": "iPhUMI_ball-plate-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 27.8
+ },
+ {
+  "src": "videos/iphumi-ball-plate-return__ep02.mp4",
+  "poster": "posters/iphumi-ball-plate-return__ep02.jpg",
+  "title": "ball to plate and back \u00b7 iPhUMI \u00b7 ep 02",
+  "task": "ball to plate and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the plate, and then return it to where it was.",
+  "episode": 2,
+  "run": "iPhUMI_ball-plate-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 19.8
+ },
+ {
+  "src": "videos/iphumi-ball-plate-return__ep03.mp4",
+  "poster": "posters/iphumi-ball-plate-return__ep03.jpg",
+  "title": "ball to plate and back \u00b7 iPhUMI \u00b7 ep 03",
+  "task": "ball to plate and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the plate, and then return it to where it was.",
+  "episode": 3,
+  "run": "iPhUMI_ball-plate-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 15.6
+ },
+ {
+  "src": "videos/iphumi-ball-plate-return__ep04.mp4",
+  "poster": "posters/iphumi-ball-plate-return__ep04.jpg",
+  "title": "ball to plate and back \u00b7 iPhUMI \u00b7 ep 04",
+  "task": "ball to plate and back",
+  "rig": "iPhUMI",
+  "robot": "ARX5",
+  "policy": "CAMUVA",
+  "outcome": "success",
+  "instruction": "Pick up the tennis ball and place it on the plate, and then return it to where it was.",
+  "episode": 4,
+  "run": "iPhUMI_ball-plate-return",
+  "views": [
+   {
+    "label": "third-person cam",
+    "fed": false
+   },
+   {
+    "label": "wrist cam",
+    "fed": true
+   },
+   {
+    "label": "wrist cam (ultrawide)",
+    "fed": true
+   }
+  ],
+  "width": 1440,
+  "height": 752,
+  "seconds": 18.0
  },
  {
   "src": "videos/rby1-box-placing-together__ep10.mp4",

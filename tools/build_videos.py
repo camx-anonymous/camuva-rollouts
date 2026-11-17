@@ -72,6 +72,11 @@ RUNS = {
     'UMI_uva-towel':                       ('UMI',                   'towel fold',      'CAMUVA',           'ARX5'),
     'YAM_plates-on-rack':                  ('YAM bimanual',          'dish in rack',  'CAMUVA',           'YAM (bimanual)'),
     'YAM_plates-in-rack_abc-vla-baseline': ('YAM bimanual',          'dish in rack',  'ABC VLA baseline', 'YAM (bimanual)'),
+    # long-context tasks: the object has to go back to where it started, so the policy must remember the start of the
+    # episode. One evaluation run of three tasks, five episodes each, split into one run directory per task.
+    'iPhUMI_cup-saucer-flip-return':       ('iPhUMI',                'cup to saucer, flip and return', 'CAMUVA', 'ARX5'),
+    'iPhUMI_ball-saucer-return':           ('iPhUMI',                'ball to saucer and back', 'CAMUVA',      'ARX5'),
+    'iPhUMI_ball-plate-return':            ('iPhUMI',                'ball to plate and back',  'CAMUVA',      'ARX5'),
 }
 # byte-identical copies of another run; skipped so the same episode is not shown twice
 DUPLICATES = {'UMI_cup': 'UMI_uva-cup-arrangement'}
